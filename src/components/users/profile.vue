@@ -53,8 +53,8 @@ export default {
     }
   },
   async created(){
-    let findUser = await db.collection('users').where("uname", "==", this.uname).get()
-    if (findUser.empty) {
+    let finduser = await db.collection('users').where("uname", "==", this.uname).get()
+    if (finduser.empty) {
       this.$router.push({ name: "allusers"})
     } else {
       this.bio = finduser.docs[0].data().bio
