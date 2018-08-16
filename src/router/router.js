@@ -3,29 +3,29 @@ import Router from 'vue-router'
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
 import store from '@/store/store.js'
-import login from '@/components/login'
-import editprofile from '@/components/users/edit-profile'
-import profile from '@/components/users/profile'
-import createproject from '@/components/projects/create-project'
-import project from '@/components/projects/project'
-import editproject from '@/components/projects/edit-project'
-import myprojects from '@/components/projects/my-projects'
-import allprojects from '@/components/projects/all-projects'
-import allusers from '@/components/users/all-users'
-import chat from '@/components/chat/chat'
-import allchats from '@/components/chat/all-chats'
+const login = () => import ('@/components/login')
+const editprofile = () => import ('@/components/users/edit-profile')
+const profile = () => import ('@/components/users/profile')
+const createproject = () => import ('@/components/projects/create-project')
+const project = () => import ('@/components/projects/project')
+const editproject = () => import ('@/components/projects/edit-project')
+const myprojects = () => import ('@/components/projects/my-projects')
+const allprojects = () => import ('@/components/projects/all-projects')
+const allusers = () => import ('@/components/users/all-users')
+const chat = () => import ('@/components/chat/chat')
+const allchats = () => import ('@/components/chat/all-chats')
 import home from '@/components/static/home'
-import cities from '@/components/static/cities'
-import workshops from '@/components/static/workshops'
-import news from '@/components/static/news/news'
-import about from '@/components/static/about'
-import connect from '@/components/static/connect'
-import testimonials from '@/components/static/testimonials'
-import privacy from '@/components/static/privacy'
-import userprivacy from '@/components/static/userprivacy'
-import news1 from '@/components/static/news/1'
-import news2 from '@/components/static/news/2'
-import projectchat from '@/components/projects/projectchat'
+const cities = () => import ('@/components/static/cities')
+const workshops = () => import ('@/components/static/workshops')
+const news = () => import ('@/components/static/news/news')
+const about = () => import ('@/components/static/about')
+const connect = () => import ('@/components/static/connect')
+const testimonials = () => import ('@/components/static/testimonials')
+const privacy = () => import ('@/components/static/privacy')
+const userprivacy = () => import ('@/components/static/userprivacy')
+const news1 = () => import ('@/components/static/news/1')
+const news2 = () => import ('@/components/static/news/2')
+const projectchat = () => import ('@/components/projects/projectchat')
 
 Vue.use(Router)
 
