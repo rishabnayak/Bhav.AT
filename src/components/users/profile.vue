@@ -2,7 +2,7 @@
   <main>
   <div class="container">
     <div class="jumbotron">
-      <div v-if="user.profilePic==undefined" style="text-align:center">
+      <div v-if="this.picCheck==undefined" style="text-align:center">
         <i class="material-icons md-48">account_circle</i>
       </div>
       <div v-else style="text-align:center">
@@ -56,15 +56,17 @@ export default {
       number: null,
       affiliation: null,
       userCheck: null,
-      imgURL: null
+      imgURL: null,
+      picCheck: null
     }
   },
   async created(){
     let finduser = await db.collection('users').where("uname", "==", this.uname).get()
+    this.picCheck = finduser.docs[0].data().profilePic
     if (finduser.empty) {
       this.$router.push({ name: "allusers"})
     }
-    else if (this.user.profilePic==undefined) {
+    else if (this.picCheck==undefined) {
       this.bio = finduser.docs[0].data().bio
       this.city = finduser.docs[0].data().city
       this.stt = finduser.docs[0].data().stt
