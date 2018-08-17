@@ -4,6 +4,16 @@
     <div class="jumbotron">
     <h4 class="mb-3">User Profile</h4>
     <form>
+      <div class="container">
+        <div v-if="this.picStat == undefined" class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+          <p>{{imageText}}</p>
+          <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
+        </div>
+        <div v-else style="text-align:center">
+          <img class="round img" :src="user.profilePic[0]"></img>
+          <span class=" btn text-muted" @click="deleteProfilePic()">Remove</span>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-auto mb-3">
           <label for="username">Username</label>
@@ -89,6 +99,30 @@ export default {
       })
       this.$router.push({ name: "profile", params: { uname: this.uname }})
     },
+    async deleteProfilePic () {
+      const ref = db.collection('users').doc(this.user.uid)
+      await ref.update({
+        profilePic: firebase.firestore.FieldValue.delete()
+      });
+      location.reload()
+    },
+    async onFileChanged (obj) {
+      this.image = obj.target.files[0]
+      this.imageText = obj.target.files[0].name+" Uploaded!"
+      this.fileName = Date.now()
+      this.storagePath = "profiles/"+this.fileName
+      const storage = firebase.storage().ref()
+      const ref = storage.child(this.storagePath)
+      await ref.put(this.image).then(snapshot => {
+        this.picStat = true
+      })
+      const url = await ref.getDownloadURL()
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        profilePic: [url,this.storagePath]
+      })
+      location.reload()
+    },
     async checkAvailability () {
       let checkname = await db.collection('users').where("uname", "==", this.uname).get()
       if (this.uname == null || this.uname == "") {
@@ -117,12 +151,19 @@ export default {
       available: null,
       unavailable: null,
       unameempty: null,
+      imageText: null,
+      image: null,
+      fileName: null,
+      storagePath: null,
+      picStat: null
     }
   },
   mounted: function(){
     this.checkAvailability()
   },
   async created(){
+
+    this.imageText = 'Click/Drag to Upload Profile Picture'
     this.bio = this.user.bio
     this.city = this.user.city
     this.stt = this.user.stt
@@ -130,11 +171,44 @@ export default {
     this.number = this.user.number
     this.affiliation = this.user.affiliation
     this.uname = this.user.uname
+    this.picStat = this.user.profilePic
   }
 }
 </script>
 
 <style>
+
+.round {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+}
+
+.round img {
+    display: block;
+/* Stretch
+      height: 100%;
+      width: 100%; */
+min-width: 100%;
+min-height: 100%;
+}
+
+.uploader {
+  position:relative;
+  overflow:hidden;
+  width:100%;
+  height:300px;
+  background:#f3f3f3;
+  border:2px;
+}
+#filePhoto{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:0;
+    cursor:pointer;
+}
 .container{
   padding-top: 40px;
   padding-bottom: 40px;

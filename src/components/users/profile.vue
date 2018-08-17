@@ -2,6 +2,12 @@
   <main>
   <div class="container">
     <div class="jumbotron">
+      <div v-if="user.profilePic==undefined" style="text-align:center">
+        <i class="material-icons md-48">account_circle</i>
+      </div>
+      <div v-else style="text-align:center">
+        <img class="round img" :src="imgURL"></img>
+      </div>
       <h1 align="center">{{displayname}}</h1>
       <h4 class="section-head">Bio</h4>
       <p class="content">{{bio}}</p>
@@ -49,14 +55,16 @@ export default {
       country: null,
       number: null,
       affiliation: null,
-      userCheck: null
+      userCheck: null,
+      imgURL: null
     }
   },
   async created(){
     let finduser = await db.collection('users').where("uname", "==", this.uname).get()
     if (finduser.empty) {
       this.$router.push({ name: "allusers"})
-    } else {
+    }
+    else if (this.user.profilePic==undefined) {
       this.bio = finduser.docs[0].data().bio
       this.city = finduser.docs[0].data().city
       this.stt = finduser.docs[0].data().stt
@@ -64,17 +72,54 @@ export default {
       this.number = finduser.docs[0].data().number
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
-      if (this.$route.params.uname == this.user.uname) {
-        this.userCheck = true
-      } else {
-        this.userCheck = false
+        if (this.$route.params.uname == this.user.uname) {
+          this.userCheck = true
+        } else {
+          this.userCheck = false
+        }
       }
-    }
+      else {
+      this.bio = finduser.docs[0].data().bio
+      this.city = finduser.docs[0].data().city
+      this.stt = finduser.docs[0].data().stt
+      this.country = finduser.docs[0].data().country
+      this.number = finduser.docs[0].data().number
+      this.affiliation = finduser.docs[0].data().affiliation
+      this.displayname = finduser.docs[0].data().displayName
+      this.imgURL = finduser.docs[0].data().profilePic[0]
+        if (this.$route.params.uname == this.user.uname) {
+          this.userCheck = true
+        } else {
+          this.userCheck = false
+        }
+      }
   }
 }
 </script>
 
 <style>
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.round {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+}
+
+.round img {
+    display: block;
+/* Stretch
+      height: 100%;
+      width: 100%; */
+min-width: 100%;
+min-height: 100%;
+}
+
 h1{
   color: #444;
 }
