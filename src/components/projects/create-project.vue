@@ -54,7 +54,8 @@ export default {
       await ref.add({
         name: this.name,
         intro: this.intro,
-        members:[this.user.uname]
+        members:[this.user.uname],
+        images: []
       })
       this.$router.push({ name: "project", params: { name: this.name }})
     },

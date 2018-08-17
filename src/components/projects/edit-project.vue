@@ -35,6 +35,23 @@
                     <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
                 </div>
               </div>
+              <h6 class="mb-3">Images</h6>
+                <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+                  <p>{{imageText}}</p>
+                  <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
+                </div>
+                <div v-if="this.imageCheck != undefined">
+                  <div v-for="image in images" :key="image.id" class="my-3 p-3 bg-white rounded shadow-sm">
+                    <div class="media text-muted pt-3">
+                      <img class="mr-2 rounded" :src="image.url" data-holder-rendered="true" style="width: 300px; height: 200px;">
+                      <div class="media-body pb-3 mb-0 small lh-125 border-gray">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                          <span class="btn text-muted" @click="deleteImage(image.path)">Remove</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               <hr class="mb-4">
             </form>
             <button :disabled="membernonexistent||memberempty||memberregd" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProject()">Update</button>
@@ -64,15 +81,59 @@ export default {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       this.members = refGet.data().members
-      this.members.push(
-        this.member
-      )
-      await ref.update({
-        intro: this.intro,
-        members: this.members
-      })
+      if (this.member == null) {
+        await ref.update({
+          intro: this.intro,
+        })
+      }
+      else {
+        this.members.push(
+          this.member
+        )
+        await ref.update({
+          intro: this.intro,
+          members: this.members
+        })
+      }
       this.member = null
       this.showMember = false
+      this.$router.push({ name: "project", params: {name:this.name}})
+    },
+    async deleteImage (path) {
+      const ref = db.collection('projects').doc(this.id)
+      const storage = firebase.storage().ref()
+      const firestorageRef = storage.child(path)
+      let data = await ref.get()
+      this.images = data.data().images.filter(image => image.path != path)
+      firestorageRef.delete().then(function() {
+          // File deleted successfully
+        }).catch(function(error) {
+          // Uh-oh, an error occurred!
+        });
+      await ref.update({
+        images: this.images
+      });
+      location.reload()
+    },
+    async onFileChanged (obj) {
+      this.image = obj.target.files[0]
+      this.imageText = obj.target.files[0].name+" Uploaded!"
+      this.fileName = Date.now()
+      this.storagePath = "projects/"+this.name+"/"+this.fileName
+      const storage = firebase.storage().ref()
+      const ref = storage.child(this.storagePath)
+      await ref.put(this.image)
+      const url = await ref.getDownloadURL()
+      const projRef = db.collection('projects').doc(this.id)
+      const projRefGet = await projRef.get()
+      this.images = projRefGet.data().images
+      this.images.push(
+        {url:url,path:this.storagePath}
+      )
+      await projRef.update({
+        images: this.images
+      })
+      location.reload()
     },
     async checkMember () {
       let membercheck = await db.collection('users').where("uname", "==", this.member).get()
@@ -110,7 +171,13 @@ export default {
       showMember: false,
       members: null,
       id: null,
-      memberregd:null
+      memberregd:null,
+      imageText: 'Click/Drag to Upload Profile Picture',
+      images:[],
+      image:null,
+      storagePath: null,
+      fileName: null,
+      imageCheck: null
     }
   },
   async created(){
@@ -118,6 +185,8 @@ export default {
     this.id = projectcheck.docs[0].id
     this.intro = projectcheck.docs[0].data().intro
     this.members = projectcheck.docs[0].data().members
+    this.images = projectcheck.docs[0].data().images
+    this.imageCheck = projectcheck.docs[0].data().images[0]
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return
@@ -130,6 +199,21 @@ export default {
 </script>
 
 <style>
+.uploader {
+  position:relative;
+  overflow:hidden;
+  width:100%;
+  height:300px;
+  background:#f3f3f3;
+  border:2px;
+}
+#filePhoto{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:0;
+    cursor:pointer;
+}
 .container{
   padding-top: 40px;
   padding-bottom: 40px;

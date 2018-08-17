@@ -117,7 +117,7 @@ export default {
       this.image = obj.target.files[0]
       this.imageText = obj.target.files[0].name+" Uploaded!"
       this.fileName = Date.now()
-      this.storagePath = "profiles/"+this.fileName
+      this.storagePath = "profiles/"+this.user.uname+"/"+this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
       await ref.put(this.image).then(snapshot => {
@@ -160,9 +160,9 @@ export default {
       unameempty: null,
       imageText: null,
       image: null,
-      fileName: null,
       storagePath: null,
-      picStat: null
+      picStat: null,
+      fileName: null
     }
   },
   mounted: function(){
