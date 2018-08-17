@@ -43,7 +43,7 @@
                 <div v-if="this.imageCheck != undefined">
                   <div v-for="image in images" :key="image.id" class="my-3 p-3 bg-white rounded shadow-sm">
                     <div class="media text-muted pt-3">
-                      <img class="mr-2 rounded" :src="image.url" data-holder-rendered="true" style="width: 300px; height: 200px;">
+                      <img class="mr-2 rounded imgstyle" :src="image.url" data-holder-rendered="true">
                       <div class="media-body pb-3 mb-0 small lh-125 border-gray">
                         <div class="d-flex justify-content-between align-items-center w-100">
                           <span class="btn text-muted" @click="deleteImage(image.path)">Remove</span>
@@ -199,6 +199,13 @@ export default {
 </script>
 
 <style>
+.imgstyle{
+  display: block;
+  max-width:300px;
+  max-height:200px;
+  width: auto;
+  height: auto;
+}
 .uploader {
   position:relative;
   overflow:hidden;

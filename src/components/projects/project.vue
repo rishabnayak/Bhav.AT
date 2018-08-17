@@ -22,6 +22,16 @@
           </div>
         </div>
     </div>
+    <div class="container jumbotron" v-if="this.imageCheck != undefined">
+      <masonry
+        :cols="{default: 3, 991: 2, 767: 1}"
+        :gutter="{default: '30px', 767: '15px'}"
+        >
+          <div v-for="image in images" :key="image.id">
+            <img :src="image.url" class="imgstyle">
+          </div>
+      </masonry>
+    </div>
   </div>
   <hr class="featurette-divider">
 
@@ -48,7 +58,9 @@ export default {
       intro: null,
       members: null,
       userCheck: null,
-      pname: null
+      pname: null,
+      images: [],
+      imageCheck: null
     }
   },
   async created(){
@@ -56,6 +68,8 @@ export default {
       this.pname = projectcheck.docs[0].data().name
       this.intro = projectcheck.docs[0].data().intro
       this.members = projectcheck.docs[0].data().members
+      this.images = projectcheck.docs[0].data().images
+      this.imageCheck = projectcheck.docs[0].data().images[0]
       let check = this.members.find(item => item == this.user.uname)
       if (check != undefined) {
         this.userCheck = true
@@ -67,6 +81,13 @@ export default {
 </script>
 
 <style>
+.imgstyle{
+  display: block;
+  max-width:300px;
+  max-height:200px;
+  width: auto;
+  height: auto;
+}
 .container{
   padding-top: 40px;
   padding-bottom: 40px;
