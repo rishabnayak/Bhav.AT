@@ -101,6 +101,13 @@ export default {
     },
     async deleteProfilePic () {
       const ref = db.collection('users').doc(this.user.uid)
+      const storage = firebase.storage().ref()
+      const firestorageRef = storage.child(this.user.profilePic[1])
+      firestorageRef.delete().then(function() {
+          // File deleted successfully
+        }).catch(function(error) {
+          // Uh-oh, an error occurred!
+        });
       await ref.update({
         profilePic: firebase.firestore.FieldValue.delete()
       });
