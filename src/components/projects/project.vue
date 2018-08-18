@@ -22,13 +22,25 @@
           </div>
         </div>
     </div>
-    <div class="container jumbotron" v-if="this.imageCheck != undefined">
+    <h4 v-if="this.images.length != 0" class="section-head">Images</h4>
+    <div class="container jumbotron" v-if="this.images.length != 0">
       <masonry
         :cols="{default: 3, 991: 2, 767: 1}"
         :gutter="{default: '30px', 767: '15px'}"
         >
           <div v-for="image in images" :key="image.id">
             <img :src="image.url" class="imgstyle">
+          </div>
+      </masonry>
+    </div>
+    <h4 v-if="this.videos.length != 0" class="section-head">Videos</h4>
+    <div class="container jumbotron" v-if="this.videos.length != 0">
+      <masonry
+        :cols="{default: 3, 991: 2, 767: 1}"
+        :gutter="{default: '30px', 767: '15px'}"
+        >
+          <div v-for="video in videos" :key="video.id">
+            <video :src="video.url" width="320" height="240" controls></video>
           </div>
       </masonry>
     </div>
@@ -60,7 +72,7 @@ export default {
       userCheck: null,
       pname: null,
       images: [],
-      imageCheck: null
+      videos: []
     }
   },
   async created(){
@@ -69,7 +81,7 @@ export default {
       this.intro = projectcheck.docs[0].data().intro
       this.members = projectcheck.docs[0].data().members
       this.images = projectcheck.docs[0].data().images
-      this.imageCheck = projectcheck.docs[0].data().images[0]
+      this.videos = projectcheck.docs[0].data().videos
       let check = this.members.find(item => item == this.user.uname)
       if (check != undefined) {
         this.userCheck = true

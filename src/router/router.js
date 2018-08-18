@@ -36,7 +36,8 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: home
+      component: home,
+      alias: '/index.html'
     },
     {
       path: '/news/2',

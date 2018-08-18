@@ -40,7 +40,7 @@
                   <p>{{imageText}}</p>
                   <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
                 </div>
-                <div v-if="this.imageCheck != undefined">
+                <div v-if="this.images.length !=0">
                   <div v-for="image in images" :key="image.id" class="my-3 p-3 bg-white rounded shadow-sm">
                     <div class="media text-muted pt-3">
                       <img class="mr-2 rounded imgstyle" :src="image.url" data-holder-rendered="true">
@@ -52,6 +52,23 @@
                     </div>
                   </div>
                 </div>
+                <h6 class="mb-3 mt-3">Video</h6>
+                  <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+                    <p>{{videoText}}</p>
+                    <input id="filePhoto" type="file" accept="video/*" @change="onVideoUpload($event)">
+                  </div>
+                  <div v-if="this.videos.length != 0">
+                    <div v-for="video in videos" :key="video.id" class="my-3 p-3 bg-white rounded shadow-sm">
+                      <div class="media text-muted pt-3">
+                        <video class="mr-2 rounded imgstyle" :src="video.url" data-holder-rendered="true"></video>
+                        <div class="media-body pb-3 mb-0 small lh-125 border-gray">
+                          <div class="d-flex justify-content-between align-items-center w-100">
+                            <span class="btn text-muted" @click="deleteVideo(video.path)">Remove</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               <hr class="mb-4">
             </form>
             <button :disabled="membernonexistent||memberempty||memberregd" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProject()">Update</button>
@@ -115,6 +132,22 @@ export default {
       });
       location.reload()
     },
+    async deleteVideo (path) {
+      const ref = db.collection('projects').doc(this.id)
+      const storage = firebase.storage().ref()
+      const firestorageRef = storage.child(path)
+      let data = await ref.get()
+      this.videos = data.data().videos.filter(video => video.path != path)
+      firestorageRef.delete().then(function() {
+          // File deleted successfully
+        }).catch(function(error) {
+          // Uh-oh, an error occurred!
+        });
+      await ref.update({
+        videos: this.videos
+      });
+      location.reload()
+    },
     async onFileChanged (obj) {
       this.image = obj.target.files[0]
       this.imageText = obj.target.files[0].name+" Uploaded!"
@@ -132,6 +165,26 @@ export default {
       )
       await projRef.update({
         images: this.images
+      })
+      location.reload()
+    },
+    async onVideoUpload (obj) {
+      this.video = obj.target.files[0]
+      this.videoText = obj.target.files[0].name+" Uploaded!"
+      this.videoFileName = Date.now()
+      this.videoStorage = "projects/"+this.name+"/"+this.videoFileName
+      const storage = firebase.storage().ref()
+      const ref = storage.child(this.videoStorage)
+      await ref.put(this.video)
+      const url = await ref.getDownloadURL()
+      const projRef = db.collection('projects').doc(this.id)
+      const projRefGet = await projRef.get()
+      this.videos = projRefGet.data().videos
+      this.videos.push(
+        {url:url,path:this.videoStorage}
+      )
+      await projRef.update({
+        videos: this.videos
       })
       location.reload()
     },
@@ -172,12 +225,16 @@ export default {
       members: null,
       id: null,
       memberregd:null,
-      imageText: 'Click/Drag to Upload Profile Picture',
+      imageText: 'Click/Drag to Upload Project Pictures',
       images:[],
       image:null,
       storagePath: null,
       fileName: null,
-      imageCheck: null
+      videos: [],
+      video: null,
+      videoStorage: null,
+      videoFileName: null,
+      videoText: 'Click/Drag to Upload Project Video'
     }
   },
   async created(){
@@ -186,7 +243,9 @@ export default {
     this.intro = projectcheck.docs[0].data().intro
     this.members = projectcheck.docs[0].data().members
     this.images = projectcheck.docs[0].data().images
-    this.imageCheck = projectcheck.docs[0].data().images[0]
+    this.videos = projectcheck.docs[0].data().videos
+    this.imageCheck = projectcheck.docs[0].data().images
+    this.videoCheck = projectcheck.docs[0].data().videos
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return

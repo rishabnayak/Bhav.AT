@@ -109,10 +109,8 @@ export default {
 .round {
     border-radius: 50%;
     overflow: hidden;
-    max-width: 150px;
-    max-height: 150px;
-    width: auto;
-    height: auto;
+    width: 150px;
+    height: 150px;
 }
 
 .round img {
