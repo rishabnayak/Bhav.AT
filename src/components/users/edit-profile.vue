@@ -115,12 +115,13 @@ export default {
     },
     async onFileChanged (obj) {
       this.image = obj.target.files[0]
-      this.imageText = obj.target.files[0].name+" Uploaded!"
+      this.imageText = "Uploading..."
       this.fileName = Date.now()
       this.storagePath = "profiles/"+this.user.uname+"/"+this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
       await ref.put(this.image).then(snapshot => {
+        this.imageText = obj.target.files[0].name+" Uploaded!"
         this.picStat = true
       })
       const url = await ref.getDownloadURL()

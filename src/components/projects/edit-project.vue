@@ -150,12 +150,14 @@ export default {
     },
     async onFileChanged (obj) {
       this.image = obj.target.files[0]
-      this.imageText = obj.target.files[0].name+" Uploaded!"
+      this.imageText = "Uploading..."
       this.fileName = Date.now()
       this.storagePath = "projects/"+this.name+"/"+this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
-      await ref.put(this.image)
+      await ref.put(this.image).then(function(snapshot) {
+        this.imageText = obj.target.files[0].name+" Uploaded!"
+      });
       const url = await ref.getDownloadURL()
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
@@ -170,12 +172,14 @@ export default {
     },
     async onVideoUpload (obj) {
       this.video = obj.target.files[0]
-      this.videoText = obj.target.files[0].name+" Uploaded!"
+      this.videoText = "Uploading..."
       this.videoFileName = Date.now()
       this.videoStorage = "projects/"+this.name+"/"+this.videoFileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.videoStorage)
-      await ref.put(this.video)
+      await ref.put(this.video).then(function(snapshot) {
+        this.videoText = obj.target.files[0].name+" Uploaded!"
+      });
       const url = await ref.getDownloadURL()
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
