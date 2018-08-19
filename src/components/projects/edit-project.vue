@@ -12,16 +12,12 @@
                 <p v-for="member in members" :key="member.id">
                     <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
                 </p>
-                <div class="row">
-                  <div class="col-md-4 mb-3">
-                    <a class="btn btn-primary" @click="showMember = !showMember && checkMember()">Add Member</a>
-                  </div>
-                </div>
-              <div v-if="showMember" class="row">
+              <div class="row">
                 <div class="col-md-auto mb-3">
                   <label for="member">Member Username</label>
                   <div class="input-group">
                     <input type="text" class="form-control" id="member" onpaste="return false" v-model="member" @input="checkMember()">
+                    <button :disabled="membernonexistent||memberempty||memberregd" class="btn" @click.prevent="addMember()">Add</button>
                     <div class="availability">
                       <i v-if="memberempty" class="material-icons red">close</i>
                       <i v-else-if="memberregd" class="material-icons red">close</i>
@@ -35,6 +31,35 @@
                     <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
                 </div>
               </div>
+              <h6 class="mb-3">Tags</h6>
+                <p v-for="tag in tags" :key="tag.id">
+                    <span class="members">{{ tag }}</span>
+                </p>
+            <div class="row">
+              <div class="col-md-auto">
+                <label for="member">Tag</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="tag" onpaste="return false" v-model="tag" @input="checkTag()">
+                  <button :disabled="memberempty||memberregd" class="btn" @click.prevent="addTag()">Add</button>
+                  <div class="availability">
+                    <i v-if="tagempty" class="material-icons red">close</i>
+                    <i v-else-if="tagregd" class="material-icons red">close</i>
+                    <i v-else-if="tagsuccess" class="material-icons green">check</i>
+                  </div>
+                </div>
+                  <p v-if="tagempty" class="red availability">Enter a Tag</p>
+                  <p v-else-if="tagregd" class="red availability">Tag already added!</p>
+                  <p v-else-if="tagsuccess" class="green availability">Tag Valid!</p>
+              </div>
+            </div>
+            <div class="row">
+              <div v-for="tag in clickTags">
+                <ul>
+                  <li v-if="tags.find(uploadedTag => uploadedTag == tag) == undefined" style="display: inline-block; float: left;"><a class="btn text-muted" @click.prevent="clickTag(tag)">{{tag}}</a></li>
+                </ul>
+              </div>
+            </div>
+            <br>
               <h6 class="mb-3">Images</h6>
                 <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
                   <p>{{imageText}}</p>
@@ -71,7 +96,7 @@
                   </div>
               <hr class="mb-4">
             </form>
-            <button :disabled="membernonexistent||memberempty||memberregd" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProject()">Update</button>
+            <button class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click.prevent="updateProject()">Update</button>
           </div>
         </div>
         <hr class="featurette-divider">
@@ -94,27 +119,60 @@ export default {
     }
   },
   methods: {
-    async updateProject () {
+    async addMember () {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       this.members = refGet.data().members
-      if (this.member == null) {
-        await ref.update({
-          intro: this.intro,
-        })
-      }
-      else {
+      if (this.membernonexistent == false||this.memberempty == false||this.memberregd == false) {
         this.members.push(
           this.member
         )
         await ref.update({
-          intro: this.intro,
           members: this.members
         })
+        this.member = null
+        this.memberexists = null
+        }
+      else {
+        return
       }
-      this.member = null
-      this.showMember = false
-      this.$router.push({ name: "project", params: {name:this.name}})
+    },
+    async addTag () {
+      const ref = db.collection('projects').doc(this.id)
+      const refGet = await ref.get()
+      this.tags = refGet.data().tags
+      if (this.tagsuccess) {
+        this.tags.push(
+          this.tag
+        )
+        await ref.update({
+          tags: this.tags
+        })
+        this.tag = null
+        this.tagsuccess = null
+        }
+      else {
+        return
+      }
+    },
+    async clickTag (tag) {
+      const ref = db.collection('projects').doc(this.id)
+      const refGet = await ref.get()
+      this.tags = refGet.data().tags
+        this.tags.push(
+          tag
+        )
+        await ref.update({
+          tags: this.tags
+        })
+      },
+    async updateProject () {
+      const ref = db.collection('projects').doc(this.id)
+      const refGet = await ref.get()
+      await ref.update({
+          intro: this.intro
+        })
+        this.$router.push({ name: "project", params: { name: this.name }})
     },
     async deleteImage (path) {
       const ref = db.collection('projects').doc(this.id)
@@ -139,7 +197,6 @@ export default {
       let data = await ref.get()
       this.videos = data.data().videos.filter(video => video.path != path)
       firestorageRef.delete().then(function() {
-          // File deleted successfully
         }).catch(function(error) {
           // Uh-oh, an error occurred!
         });
@@ -155,9 +212,7 @@ export default {
       this.storagePath = "projects/"+this.name+"/"+this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
-      await ref.put(this.image).then(function(snapshot) {
-        this.imageText = obj.target.files[0].name+" Uploaded!"
-      });
+      await ref.put(this.image)
       const url = await ref.getDownloadURL()
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
@@ -177,9 +232,7 @@ export default {
       this.videoStorage = "projects/"+this.name+"/"+this.videoFileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.videoStorage)
-      await ref.put(this.video).then(function(snapshot) {
-        this.videoText = obj.target.files[0].name+" Uploaded!"
-      });
+      await ref.put(this.video)
       const url = await ref.getDownloadURL()
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
@@ -215,8 +268,23 @@ export default {
         this.membernonexistent = false
         this.memberregd = false
       }
+    },
+  async checkTag () {
+    let check = this.tags.find(tag => tag == this.tag)
+    if (this.tag == null || this.tag == "") {
+      this.tagempty = true
+    } else if (check == undefined) {
+      this.tagempty = false
+      this.tagregd = false
+      this.tagsuccess = true
     }
-  },
+    else if (check != undefined){
+      this.tagempty = false
+      this.tagregd = true
+      this.tagsuccess = false
+    }
+  }
+},
   data () {
     return {
       name: this.$route.params.name,
@@ -225,7 +293,6 @@ export default {
       memberempty: null,
       memberexists: null,
       membernonexistent: null,
-      showMember: false,
       members: null,
       id: null,
       memberregd:null,
@@ -238,7 +305,13 @@ export default {
       video: null,
       videoStorage: null,
       videoFileName: null,
-      videoText: 'Click/Drag to Upload Project Video'
+      videoText: 'Click/Drag to Upload Project Video',
+      tags: [],
+      tag: null,
+      tagempty: null,
+      tagregd: null,
+      tagsuccess: null,
+      clickTags: ['iot','at','python','javascript','nodejs','vue','image processing','ai']
     }
   },
   async created(){
@@ -250,6 +323,7 @@ export default {
     this.videos = projectcheck.docs[0].data().videos
     this.imageCheck = projectcheck.docs[0].data().images
     this.videoCheck = projectcheck.docs[0].data().videos
+    this.tags = projectcheck.docs[0].data().tags
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return

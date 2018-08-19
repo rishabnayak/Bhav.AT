@@ -58,7 +58,6 @@ export default {
   async created(){
     let projectsGet = await db.collection('projects').where("members", "array-contains", this.user.uname).get()
     this.projects = projectsGet.docs
-    console.log(this.projects)
   }
 }
 </script>

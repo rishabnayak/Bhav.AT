@@ -56,7 +56,8 @@ export default {
         intro: this.intro,
         members:[this.user.uname],
         images: [],
-        videos: []
+        videos: [],
+        tags: []
       })
       this.$router.push({ name: "project", params: { name: this.name }})
     },

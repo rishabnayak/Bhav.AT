@@ -46,7 +46,8 @@ export default {
       chatBoxID: null,
       newMessage: null,
       disableSend: null,
-      members: null
+      members: null,
+      name: this.$route.params.name
     }
   },
   methods: {
@@ -87,28 +88,28 @@ export default {
   async created(){
     let findChat = await db.collection('projectchats').where("chatBoxID", "array-contains", this.route).get()
     let usercheck = await db.collection('projects').where("name", "==", this.name).get()
-    this.members = projectcheck.docs[0].data().members
+    this.members = usercheck.docs[0].data().members
+    let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
-      return
+      const ref = db.collection('projectchats')
+      if (findChat.empty) {
+        await ref.add({
+          chats: [],
+          chatBoxID:[this.route]
+        })
+        location.reload()
+      } else {
+        this.chatBoxID = findChat.docs[0].id
+      }
+      const msgref = db.collection('projectchats').doc(this.chatBoxID)
+      msgref.onSnapshot(docSnapshot => {
+        this.chats = docSnapshot.data().chats
+      })
+      this.disableSend = true
     }
     else {
       this.$router.push({ name: "project", params: {name:this.$route.params.name}})
-    }
-    const ref = db.collection('projectchats')
-    if (findChat.empty) {
-      await ref.add({
-        chats: [],
-        chatBoxID:[this.route]
-      })
-      location.reload()
-    } else {
-      this.chatBoxID = findChat.docs[0].id
-    }
-    const msgref = db.collection('projectchats').doc(this.chatBoxID)
-    msgref.onSnapshot(docSnapshot => {
-      this.chats = docSnapshot.data().chats
-    })
-    this.disableSend = true
+      }
     }
 }
 </script>
