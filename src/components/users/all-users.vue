@@ -93,6 +93,8 @@ export default {
       let all = await db.collection('users').get()
       this.users = all.docs
       this.tagInput = null
+      this.tagempty = null
+      this.tagfound = null
     }
   },
   data () {

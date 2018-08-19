@@ -91,6 +91,8 @@ export default {
       let all = await db.collection('projects').get()
       this.projects = all.docs
       this.tagInput = null
+      this.tagempty = null
+      this.tagfound = null
     }
   },
   data () {
