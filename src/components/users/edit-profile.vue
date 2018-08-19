@@ -95,7 +95,8 @@ export default {
         country: this.country,
         number: this.number,
         affiliation: this.affiliation,
-        uname: this.uname
+        uname: this.uname,
+        tags:[this.city,this.stt,this.country,this.affiliation,this.uname]
       })
       this.$router.push({ name: "profile", params: { uname: this.uname }})
     },
@@ -170,7 +171,6 @@ export default {
     this.checkAvailability()
   },
   async created(){
-
     this.imageText = 'Click/Drag to Upload Profile Picture'
     this.bio = this.user.bio
     this.city = this.user.city
