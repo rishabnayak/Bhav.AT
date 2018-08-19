@@ -9,6 +9,25 @@
       </div>
     </div>
     <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <form>
+            <label for="tagSearch">Tag Search</label>
+            <div class="input-group add-on">
+              <input type="text" class="form-control mr-1" id="tagSearch" placeholder="Search for Project Tags" onpaste="return false" v-model="tagInput" @input="checkTag()">
+              <div class="input-group-btn">
+                <button :disabled="tagempty||!tagfound" class="btn btn-primary mr-1" @click.prevent="search()">Search</button>
+                <button class="btn btn-primary" @click.prevent="reset()">Reset</button>
+             </div>
+            </div>
+            <p v-if="tagempty" class="red availability">Enter a Tag</p>
+            <p v-else-if="tagfound == false" class="red availability">Tag not found!</p>
+            <p v-else-if="tagfound" class="green availability">Tag Valid!</p>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container">
       <masonry
         :cols="{default: 3, 991: 2, 767: 1}"
         :gutter="{default: '30px', 767: '15px'}"
@@ -48,9 +67,38 @@ export default {
       return this.$store.state.user
     }
   },
+  methods: {
+    async checkTag () {
+      let check = await db.collection('projects').where("tags", "array-contains", this.tagInput).get()
+      if (this.tagInput == null || this.tagInput == "") {
+        this.tagempty = true
+      } else if (check.empty) {
+        this.tagempty = false
+        this.tagfound = false
+      }
+      else if (check.empty == false){
+        this.tagempty = false
+        this.tagfound = true
+      }
+    },
+    async search () {
+      let searchresults = await db.collection('projects').where("tags", "array-contains", this.tagInput).get()
+      this.projects = searchresults.docs
+      this.tagempty = null
+      this.tagfound = null
+    },
+    async reset () {
+      let all = await db.collection('projects').get()
+      this.projects = all.docs
+      this.tagInput = null
+    }
+  },
   data () {
     return {
-      projects: null
+      projects: null,
+      tagempty: null,
+      tagfound: null,
+      tagInput: null
     }
   },
   async created(){

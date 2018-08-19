@@ -17,7 +17,7 @@
           <div class="col-12">
             <form>
               <div class="input-group add-on">
-                <input type="text" class="form-control" id="newMessage" placeholder="Send a message..." v-model="newMessage" @input="checkInput()">
+                <input type="text" class="form-control mr-1" id="newMessage" placeholder="Send a message..." v-model="newMessage" @input="checkInput()">
                 <div class="input-group-btn">
                   <button :disabled="disableSend" class="btn btn-primary" @click.prevent="sendMessage()">Send</button>
                </div>

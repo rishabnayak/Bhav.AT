@@ -50,4 +50,29 @@
             <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
           </footer>
     </main>
-</template
+</template>
+<script>
+import firebase from 'firebase'
+import firebaseui from 'firebaseui'
+import db from '@/firebase/init.js'
+export default {
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
+async mounted (){
+  if (this.user) {
+    if (this.user.uname == undefined) {
+      this.$router.push({ name: "editprofile"})
+    }
+    else {
+      return
+    }
+  }
+  else {
+    return
+    }
+  }
+}
+</script>

@@ -40,7 +40,7 @@
                 <label for="member">Tag</label>
                 <div class="input-group">
                   <input type="text" class="form-control" id="tag" onpaste="return false" v-model="tag" @input="checkTag()">
-                  <button :disabled="memberempty||memberregd" class="btn" @click.prevent="addTag()">Add</button>
+                  <button :disabled="tagempty||tagregd" class="btn" @click.prevent="addTag()">Add</button>
                   <div class="availability">
                     <i v-if="tagempty" class="material-icons red">close</i>
                     <i v-else-if="tagregd" class="material-icons red">close</i>

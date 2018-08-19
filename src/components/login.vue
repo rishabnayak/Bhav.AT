@@ -37,12 +37,6 @@ export default {
         signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID,firebase.auth.EmailAuthProvider.PROVIDER_ID]
       })
     }
-    if (this.user.uname == undefined) {
-      this.$router.push({ name: "editprofile"})
-    }
-    else {
-      return
-    }
   }
 }
 </script>
