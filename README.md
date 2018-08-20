@@ -1,17 +1,8 @@
 # Bhav.AT
-> A Vue.js project
 
-## Project setup
-```
-npm install
-```
+Bringing Assistive Technology design to the forefront of innovation
+> This Web App is under Active Development
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Capabilities
 
-### Compiles and minifies for production
-```
-npm run build
-```
+- Authentication 
