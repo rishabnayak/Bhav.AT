@@ -13,7 +13,6 @@
           <div class="input-group add-on">
             <input type="text" class="form-control mr-1" id="tagSearch" placeholder="Search for User Tags" onpaste="return false" v-model="tagInput" @input="checkTag()">
             <div class="input-group-btn">
-              <button :disabled="tagempty||!tagfound" class="btn btn-primary mr-1" @click.prevent="search()">Search</button>
               <button class="btn btn-primary" @click.prevent="reset()">Reset</button>
             </div>
           </div>
@@ -89,13 +88,7 @@ export default {
         let searchresults = await db.collection('users').where("tags", "array-contains", this.tagInput).get()
         this.users = searchresults.docs
       }
-    },
-    async search() {
-      let searchresults = await db.collection('users').where("tags", "array-contains", this.tagInput).get()
-      this.users = searchresults.docs
-      this.tagempty = null
-      this.tagfound = null
-    },
+    }
     async reset() {
       let all = await db.collection('users').get()
       this.users = all.docs
