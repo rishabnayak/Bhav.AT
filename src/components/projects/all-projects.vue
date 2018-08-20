@@ -86,7 +86,7 @@ export default {
         let searchresults = await db.collection('projects').where("tags", "array-contains", this.tagInput).get()
         this.projects = searchresults.docs
       }
-    }
+    },
     async reset() {
       let all = await db.collection('projects').get()
       this.projects = all.docs
