@@ -17,4 +17,4 @@ Bringing Assistive Technology design to the forefront of innovation
 
 Interested, active developers are encouraged to contribute to the project! Feel free to contact me via IM/Email.
 
-My Website: [rishabnayak.me]
+My Website: [rishabnayak.me](rishabnayak.me)
