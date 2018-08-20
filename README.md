@@ -13,6 +13,16 @@ Bringing Assistive Technology design to the forefront of innovation
 - Search
 - Basic Service Worker with Page Caching
 
+### Technologies
+
+- Vue.JS
+- Vuex
+- Firebase
+  - Firebase Cloud Firestore
+  - Firebase Auth
+  - Firebase Cloud Storage
+  - Firebase Cloud Functions
+
 ### Contributing
 
 Interested, active developers are encouraged to contribute to the project! Feel free to contact me via IM/Email.
