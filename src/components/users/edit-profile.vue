@@ -1,77 +1,81 @@
 <template>
-  <main>
+<main>
   <div class="container">
     <div class="jumbotron">
-    <h4 class="mb-3">User Profile</h4>
-    <form>
-      <div class="container">
-        <div v-if="this.picStat == undefined" class="uploader d-flex flex-column justify-content-center align-items-center rounded">
-          <p>{{imageText}}</p>
-          <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
-        </div>
-        <div v-else style="text-align:center">
-          <img class="round img" :src="user.profilePic[0]"></img>
-          <span class=" btn text-muted" @click="deleteProfilePic()">Remove</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-auto mb-3">
-          <label for="username">Username</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">@</span>
-            </div>
-            <input type="text" class="form-control" id="username" onpaste="return false" v-model="uname" @input="checkAvailability()">
-            <div class="availability">
-              <i v-if="unameempty" class="material-icons red">close</i>
-              <i v-else-if="available" class="material-icons green">check</i>
-              <i v-else-if="unavailable" class="material-icons red">close</i>
-            </div>
+      <h4 class="mb-3">User Profile</h4>
+      <form>
+        <div class="container">
+          <div v-if="this.picStat == undefined" class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+            <p>{{imageText}}</p>
+            <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
           </div>
-          <p v-if="unameempty" class="red availability">Enter a Username</p>
-          <p v-else-if="available" class="green availability">Username available!</p>
-          <p v-else-if="unavailable" class="red availability">Username unavailable!</p>
+          <div v-else style="text-align:center">
+            <img class="round img" :src="user.profilePic[0]"></img>
+            <span class=" btn text-muted" @click="deleteProfilePic()">Remove</span>
+          </div>
         </div>
-      </div>
-      <div class="mb-3">
-        <label for="bio">Short Introduction</label>
-        <textarea class="form-control" rows="5" id="bio" v-model="bio"></textarea>
-      </div>
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <label for="city">City</label>
-          <input type="text" class="form-control" id="city" v-model="city">
+        <div class="row">
+          <div class="col-md-auto mb-3">
+            <label for="username">Username</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">@</span>
+              </div>
+              <input type="text" class="form-control" id="username" onpaste="return false" v-model="uname" @input="checkAvailability()">
+              <div class="availability">
+                <i v-if="unameempty" class="material-icons red">close</i>
+                <i v-else-if="available" class="material-icons green">check</i>
+                <i v-else-if="unavailable" class="material-icons red">close</i>
+              </div>
+            </div>
+            <p v-if="unameempty" class="red availability">Enter a Username</p>
+            <p v-else-if="available" class="green availability">Username available!</p>
+            <p v-else-if="unavailable" class="red availability">Username unavailable!</p>
+          </div>
         </div>
-        <div class="col-md-4 mb-3">
-          <label for="state">State</label>
-          <input type="text" class="form-control" id="state" v-model="stt">
+        <div class="mb-3">
+          <label for="bio">Short Introduction</label>
+          <textarea class="form-control" rows="5" id="bio" v-model="bio"></textarea>
         </div>
-        <div class="col-md-4 mb-3">
-          <label for="country">Country</label>
-          <input type="text" class="form-control" id="country" v-model="country">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" v-model="city">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="state">State</label>
+            <input type="text" class="form-control" id="state" v-model="stt">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="country">Country</label>
+            <input type="text" class="form-control" id="country" v-model="country">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <label for="number">Phone Number</label>
-          <input type="text" class="form-control" id="number" v-model="number">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="number">Phone Number</label>
+            <input type="text" class="form-control" id="number" v-model="number">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="affiliation">Current Affiliation</label>
+            <input type="text" class="form-control" id="affiliation" placeholder="University/College/Company" v-model="affiliation">
+          </div>
         </div>
-        <div class="col-md-4 mb-3">
-          <label for="affiliation">Current Affiliation</label>
-          <input type="text" class="form-control" id="affiliation" placeholder="University/College/Company" v-model="affiliation">
-        </div>
-      </div>
-      <hr class="mb-4">
-    </form>
-    <button :disabled="unavailable||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
+        <hr class="mb-4">
+      </form>
+      <button :disabled="unavailable||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
+    </div>
   </div>
-</div>
-<hr class="featurette-divider">
+  <hr class="featurette-divider">
 
-<footer class="container">
-<p class="float-right"><a href="#">Back to top</a></p>
-<p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
-</footer>
+  <footer class="container">
+    <p class="float-right"><a href="#">Back to top</a></p>
+    <p>© 2018 Bhav.AT ·
+      <a>
+        <router-link :to="{ name: 'privacy'}">Privacy</router-link>
+      </a>
+    </p>
+  </footer>
 </main>
 </template>
 
@@ -80,13 +84,13 @@ import firebase from 'firebase'
 import db from '@/firebase/init.js'
 export default {
   name: 'editprofile',
-  computed:{
-    user () {
+  computed: {
+    user() {
       return this.$store.state.user
     }
   },
   methods: {
-    async updateProfile () {
+    async updateProfile() {
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         bio: this.bio,
@@ -96,43 +100,48 @@ export default {
         number: this.number,
         affiliation: this.affiliation,
         uname: this.uname,
-        tags:[this.city,this.stt,this.country,this.affiliation,this.uname]
+        tags: [this.city, this.stt, this.country, this.affiliation, this.uname]
       })
-      this.$router.push({ name: "profile", params: { uname: this.uname }})
+      this.$router.push({
+        name: "profile",
+        params: {
+          uname: this.uname
+        }
+      })
     },
-    async deleteProfilePic () {
+    async deleteProfilePic() {
       const ref = db.collection('users').doc(this.user.uid)
       const storage = firebase.storage().ref()
       const firestorageRef = storage.child(this.user.profilePic[1])
       firestorageRef.delete().then(function() {
-          // File deleted successfully
-        }).catch(function(error) {
-          // Uh-oh, an error occurred!
-        });
+        // File deleted successfully
+      }).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
       await ref.update({
         profilePic: firebase.firestore.FieldValue.delete()
       });
       location.reload()
     },
-    async onFileChanged (obj) {
+    async onFileChanged(obj) {
       this.image = obj.target.files[0]
       this.imageText = "Uploading..."
       this.fileName = Date.now()
-      this.storagePath = "profiles/"+this.user.uname+"/"+this.fileName
+      this.storagePath = "profiles/" + this.user.uname + "/" + this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
       await ref.put(this.image).then(snapshot => {
-        this.imageText = obj.target.files[0].name+" Uploaded!"
+        this.imageText = obj.target.files[0].name + " Uploaded!"
         this.picStat = true
       })
       const url = await ref.getDownloadURL()
       const userRef = db.collection('users').doc(this.user.uid)
       await userRef.update({
-        profilePic: [url,this.storagePath]
+        profilePic: [url, this.storagePath]
       })
       location.reload()
     },
-    async checkAvailability () {
+    async checkAvailability() {
       let checkname = await db.collection('users').where("uname", "==", this.uname).get()
       if (this.uname == null || this.uname == "") {
         this.unameempty = true
@@ -140,15 +149,14 @@ export default {
         this.available = true
         this.unameempty = false
         this.unavailable = false
-      }
-      else {
+      } else {
         this.available = false
         this.unameempty = false
         this.unavailable = true
       }
     }
   },
-  data () {
+  data() {
     return {
       bio: null,
       city: null,
@@ -167,10 +175,10 @@ export default {
       fileName: null
     }
   },
-  mounted: function(){
+  mounted: function() {
     this.checkAvailability()
   },
-  async created(){
+  async created() {
     this.imageText = 'Click/Drag to Upload Profile Picture'
     this.bio = this.user.bio
     this.city = this.user.city
@@ -185,59 +193,62 @@ export default {
 </script>
 
 <style>
-
 .round {
-    border-radius: 50%;
-    overflow: hidden;
-    width: 150px;
-    height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
 }
 
 .round img {
-    display: block;
-/* Stretch
+  display: block;
+  /* Stretch
       height: 100%;
       width: 100%; */
-min-width: 100%;
-min-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .uploader {
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  height:300px;
-  background:#f3f3f3;
-  border:2px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 300px;
+  background: #f3f3f3;
+  border: 2px;
 }
-#filePhoto{
-    position:absolute;
-    width:100%;
-    height:100%;
-    opacity:0;
-    cursor:pointer;
+
+#filePhoto {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
-.container{
+
+.container {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.material-icons.green { color: green;
+
+.material-icons.green {
+  color: green;
 }
 
-.material-icons.red { color: red;
+.material-icons.red {
+  color: red;
 }
 
-.availability{
+.availability {
   padding-top: 6px;
   padding-left: 3px;
 }
 
-.green{
+.green {
   color: green;
 }
 
-.red{
+.red {
   color: red;
 }
-
 </style>

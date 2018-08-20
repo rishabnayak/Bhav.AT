@@ -1,5 +1,5 @@
 <template>
-  <main>
+<main>
   <div class="container">
     <div class="jumbotron">
       <div v-if="this.picCheck==undefined" style="text-align:center">
@@ -22,16 +22,20 @@
       <h4 class="section-head">Current Affiliation</h4>
       <p class="content">{{affiliation}}</p>
       <router-link to="/editprofile">
-      <button v-if="userCheck" class="btn btn-primary btn-lg btn-block col-md-3">Update</button>
+        <button v-if="userCheck" class="btn btn-primary btn-lg btn-block col-md-3">Update</button>
       </router-link>
     </div>
   </div>
   <hr class="featurette-divider">
 
-<footer class="container">
-  <p class="float-right"><a href="#">Back to top</a></p>
-  <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
-</footer>
+  <footer class="container">
+    <p class="float-right"><a href="#">Back to top</a></p>
+    <p>© 2018 Bhav.AT ·
+      <a>
+        <router-link :to="{ name: 'privacy'}">Privacy</router-link>
+      </a>
+    </p>
+  </footer>
 </main>
 </template>
 
@@ -40,12 +44,12 @@ import firebase from 'firebase'
 import db from '@/firebase/init.js'
 export default {
   name: 'profile',
-  computed:{
-    user () {
+  computed: {
+    user() {
       return this.$store.state.user
     }
   },
-  data () {
+  data() {
     return {
       uname: this.$route.params.uname,
       displayname: null,
@@ -60,13 +64,14 @@ export default {
       picCheck: null
     }
   },
-  async created(){
+  async created() {
     let finduser = await db.collection('users').where("uname", "==", this.uname).get()
     this.picCheck = finduser.docs[0].data().profilePic
     if (finduser.empty) {
-      this.$router.push({ name: "allusers"})
-    }
-    else if (this.picCheck==undefined) {
+      this.$router.push({
+        name: "allusers"
+      })
+    } else if (this.picCheck == undefined) {
       this.bio = finduser.docs[0].data().bio
       this.city = finduser.docs[0].data().city
       this.stt = finduser.docs[0].data().stt
@@ -74,13 +79,12 @@ export default {
       this.number = finduser.docs[0].data().number
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
-        if (this.$route.params.uname == this.user.uname) {
-          this.userCheck = true
-        } else {
-          this.userCheck = false
-        }
+      if (this.$route.params.uname == this.user.uname) {
+        this.userCheck = true
+      } else {
+        this.userCheck = false
       }
-      else {
+    } else {
       this.bio = finduser.docs[0].data().bio
       this.city = finduser.docs[0].data().city
       this.stt = finduser.docs[0].data().stt
@@ -89,48 +93,58 @@ export default {
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
       this.imgURL = finduser.docs[0].data().profilePic[0]
-        if (this.$route.params.uname == this.user.uname) {
-          this.userCheck = true
-        } else {
-          this.userCheck = false
-        }
+      if (this.$route.params.uname == this.user.uname) {
+        this.userCheck = true
+      } else {
+        this.userCheck = false
       }
+    }
   }
 }
 </script>
 
 <style>
+.material-icons.md-18 {
+  font-size: 18px;
+}
 
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
 
 .round {
-    border-radius: 50%;
-    overflow: hidden;
-    width: 150px;
-    height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
 }
 
 .round img {
-    display: block;
-/* Stretch
+  display: block;
+  /* Stretch
       height: 100%;
       width: 100%; */
-min-width: 100%;
-min-height: 100%;
+  min-width: 100%;
+  min-height: 100%;
 }
 
-h1{
+h1 {
   color: #444;
 }
 
-.section-head{
+.section-head {
   padding-left: 8px
 }
 
-.content{
+.content {
   padding-left: 12px
 }
 </style>

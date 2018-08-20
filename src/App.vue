@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <navigation/>
-    <router-view/>
-  </div>
+<div id="app">
+  <navigation/>
+  <router-view/>
+</div>
 </template>
 
 <script>
@@ -14,9 +14,8 @@ export default {
   components: {
     navigation
   },
-  data(){
-    return{
-    }
+  data() {
+    return {}
   }
 }
 </script>

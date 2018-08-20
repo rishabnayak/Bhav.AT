@@ -1,111 +1,115 @@
 <template>
-  <main>
+<main>
   <div class="container">
     <div class="jumbotron">
-            <h4 class="mb-3">Project {{name}}</h4>
-            <form>
-              <div class="mb-3">
-                <label for="intro">Short Introduction</label>
-                <textarea class="form-control" rows="5" id="intro" v-model="intro"></textarea>
-              </div>
-              <h6 class="mb-3">Members</h6>
-                <p v-for="member in members" :key="member.id">
-                    <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
-                </p>
-              <div class="row">
-                <div class="col-md-auto mb-3">
-                  <label for="member">Member Username</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="member" onpaste="return false" v-model="member" @input="checkMember()">
-                    <button :disabled="membernonexistent||memberempty||memberregd" class="btn" @click.prevent="addMember()">Add</button>
-                    <div class="availability">
-                      <i v-if="memberempty" class="material-icons red">close</i>
-                      <i v-else-if="memberregd" class="material-icons red">close</i>
-                      <i v-else-if="memberexists" class="material-icons green">check</i>
-                      <i v-else-if="membernonexistent" class="material-icons red">close</i>
-                    </div>
-                  </div>
-                    <p v-if="memberempty" class="red availability">Enter a Username</p>
-                    <p v-else-if="memberregd" class="red availability">Member already registered!</p>
-                    <p v-else-if="memberexists" class="green availability">Member found!</p>
-                    <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
-                </div>
-              </div>
-              <h6 class="mb-3">Tags</h6>
-                <p v-for="tag in tags" :key="tag.id">
-                    <span class="members">{{ tag }}</span>
-                </p>
-            <div class="row">
-              <div class="col-md-auto">
-                <label for="member">Tag</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id="tag" onpaste="return false" v-model="tag" @input="checkTag()">
-                  <button :disabled="tagempty||tagregd" class="btn" @click.prevent="addTag()">Add</button>
-                  <div class="availability">
-                    <i v-if="tagempty" class="material-icons red">close</i>
-                    <i v-else-if="tagregd" class="material-icons red">close</i>
-                    <i v-else-if="tagsuccess" class="material-icons green">check</i>
-                  </div>
-                </div>
-                  <p v-if="tagempty" class="red availability">Enter a Tag</p>
-                  <p v-else-if="tagregd" class="red availability">Tag already added!</p>
-                  <p v-else-if="tagsuccess" class="green availability">Tag Valid!</p>
+      <h4 class="mb-3">Project {{name}}</h4>
+      <form>
+        <div class="mb-3">
+          <label for="intro">Short Introduction</label>
+          <textarea class="form-control" rows="5" id="intro" v-model="intro"></textarea>
+        </div>
+        <h6 class="mb-3">Members</h6>
+        <p v-for="member in members" :key="member.id">
+          <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
+        </p>
+        <div class="row">
+          <div class="col-md-auto mb-3">
+            <label for="member">Member Username</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="member" onpaste="return false" v-model="member" @input="checkMember()">
+              <button :disabled="membernonexistent||memberempty||memberregd" class="btn" @click.prevent="addMember()">Add</button>
+              <div class="availability">
+                <i v-if="memberempty" class="material-icons red">close</i>
+                <i v-else-if="memberregd" class="material-icons red">close</i>
+                <i v-else-if="memberexists" class="material-icons green">check</i>
+                <i v-else-if="membernonexistent" class="material-icons red">close</i>
               </div>
             </div>
-            <div class="row">
-              <div v-for="tag in clickTags">
-                <ul>
-                  <li v-if="tags.find(uploadedTag => uploadedTag == tag) == undefined" style="display: inline-block; float: left;"><a class="btn text-muted" @click.prevent="clickTag(tag)">{{tag}}</a></li>
-                </ul>
-              </div>
-            </div>
-            <br>
-              <h6 class="mb-3">Images</h6>
-                <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
-                  <p>{{imageText}}</p>
-                  <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
-                </div>
-                <div v-if="this.images.length !=0">
-                  <div v-for="image in images" :key="image.id" class="my-3 p-3 bg-white rounded shadow-sm">
-                    <div class="media text-muted pt-3">
-                      <img class="mr-2 rounded imgstyle" :src="image.url" data-holder-rendered="true">
-                      <div class="media-body pb-3 mb-0 small lh-125 border-gray">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                          <span class="btn text-muted" @click="deleteImage(image.path)">Remove</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="mb-3 mt-3">Video</h6>
-                  <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
-                    <p>{{videoText}}</p>
-                    <input id="filePhoto" type="file" accept="video/*" @change="onVideoUpload($event)">
-                  </div>
-                  <div v-if="this.videos.length != 0">
-                    <div v-for="video in videos" :key="video.id" class="my-3 p-3 bg-white rounded shadow-sm">
-                      <div class="media text-muted pt-3">
-                        <video class="mr-2 rounded imgstyle" :src="video.url" data-holder-rendered="true"></video>
-                        <div class="media-body pb-3 mb-0 small lh-125 border-gray">
-                          <div class="d-flex justify-content-between align-items-center w-100">
-                            <span class="btn text-muted" @click="deleteVideo(video.path)">Remove</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              <hr class="mb-4">
-            </form>
-            <button class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click.prevent="updateProject()">Update</button>
+            <p v-if="memberempty" class="red availability">Enter a Username</p>
+            <p v-else-if="memberregd" class="red availability">Member already registered!</p>
+            <p v-else-if="memberexists" class="green availability">Member found!</p>
+            <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
           </div>
         </div>
-        <hr class="featurette-divider">
+        <h6 class="mb-3">Tags</h6>
+        <p v-for="tag in tags" :key="tag.id">
+          <span class="members">{{ tag }}</span>
+        </p>
+        <div class="row">
+          <div class="col-md-auto">
+            <label for="member">Tag</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="tag" onpaste="return false" v-model="tag" @input="checkTag()">
+              <button :disabled="tagempty||tagregd" class="btn" @click.prevent="addTag()">Add</button>
+              <div class="availability">
+                <i v-if="tagempty" class="material-icons red">close</i>
+                <i v-else-if="tagregd" class="material-icons red">close</i>
+                <i v-else-if="tagsuccess" class="material-icons green">check</i>
+              </div>
+            </div>
+            <p v-if="tagempty" class="red availability">Enter a Tag</p>
+            <p v-else-if="tagregd" class="red availability">Tag already added!</p>
+            <p v-else-if="tagsuccess" class="green availability">Tag Valid!</p>
+          </div>
+        </div>
+        <div class="row">
+          <div v-for="tag in clickTags">
+            <ul>
+              <li v-if="tags.find(uploadedTag => uploadedTag == tag) == undefined" style="display: inline-block; float: left;"><a class="btn text-muted" @click.prevent="clickTag(tag)">{{tag}}</a></li>
+            </ul>
+          </div>
+        </div>
+        <br>
+        <h6 class="mb-3">Images</h6>
+        <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+          <p>{{imageText}}</p>
+          <input id="filePhoto" type="file" accept="image/*" @change="onFileChanged($event)">
+        </div>
+        <div v-if="this.images.length !=0">
+          <div v-for="image in images" :key="image.id" class="my-3 p-3 bg-white rounded shadow-sm">
+            <div class="media text-muted pt-3">
+              <img class="mr-2 rounded imgstyle" :src="image.url" data-holder-rendered="true">
+              <div class="media-body pb-3 mb-0 small lh-125 border-gray">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                  <span class="btn text-muted" @click="deleteImage(image.path)">Remove</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h6 class="mb-3 mt-3">Video</h6>
+        <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+          <p>{{videoText}}</p>
+          <input id="filePhoto" type="file" accept="video/*" @change="onVideoUpload($event)">
+        </div>
+        <div v-if="this.videos.length != 0">
+          <div v-for="video in videos" :key="video.id" class="my-3 p-3 bg-white rounded shadow-sm">
+            <div class="media text-muted pt-3">
+              <video class="mr-2 rounded imgstyle" :src="video.url" data-holder-rendered="true"></video>
+              <div class="media-body pb-3 mb-0 small lh-125 border-gray">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                  <span class="btn text-muted" @click="deleteVideo(video.path)">Remove</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="mb-4">
+      </form>
+      <button class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click.prevent="updateProject()">Update</button>
+    </div>
+  </div>
+  <hr class="featurette-divider">
 
-      <footer class="container">
-        <p class="float-right"><a href="#">Back to top</a></p>
-        <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
-      </footer>
-    </main>
+  <footer class="container">
+    <p class="float-right"><a href="#">Back to top</a></p>
+    <p>© 2018 Bhav.AT ·
+      <a>
+        <router-link :to="{ name: 'privacy'}">Privacy</router-link>
+      </a>
+    </p>
+  </footer>
+</main>
 </template>
 
 <script>
@@ -113,17 +117,17 @@ import firebase from 'firebase'
 import db from '@/firebase/init.js'
 export default {
   name: 'editproject',
-  computed:{
-    user () {
+  computed: {
+    user() {
       return this.$store.state.user
     }
   },
   methods: {
-    async addMember () {
+    async addMember() {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       this.members = refGet.data().members
-      if (this.membernonexistent == false||this.memberempty == false||this.memberregd == false) {
+      if (this.membernonexistent == false || this.memberempty == false || this.memberregd == false) {
         this.members.push(
           this.member
         )
@@ -132,12 +136,11 @@ export default {
         })
         this.member = null
         this.memberexists = null
-        }
-      else {
+      } else {
         return
       }
     },
-    async addTag () {
+    async addTag() {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       this.tags = refGet.data().tags
@@ -150,66 +153,69 @@ export default {
         })
         this.tag = null
         this.tagsuccess = null
-        }
-      else {
+      } else {
         return
       }
     },
-    async clickTag (tag) {
+    async clickTag(tag) {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       this.tags = refGet.data().tags
-        this.tags.push(
-          tag
-        )
-        await ref.update({
-          tags: this.tags
-        })
-      },
-    async updateProject () {
+      this.tags.push(
+        tag
+      )
+      await ref.update({
+        tags: this.tags
+      })
+    },
+    async updateProject() {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       await ref.update({
-          intro: this.intro
-        })
-        this.$router.push({ name: "project", params: { name: this.name }})
+        intro: this.intro
+      })
+      this.$router.push({
+        name: "project",
+        params: {
+          name: this.name
+        }
+      })
     },
-    async deleteImage (path) {
+    async deleteImage(path) {
       const ref = db.collection('projects').doc(this.id)
       const storage = firebase.storage().ref()
       const firestorageRef = storage.child(path)
       let data = await ref.get()
       this.images = data.data().images.filter(image => image.path != path)
       firestorageRef.delete().then(function() {
-          // File deleted successfully
-        }).catch(function(error) {
-          // Uh-oh, an error occurred!
-        });
+        // File deleted successfully
+      }).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
       await ref.update({
         images: this.images
       });
       location.reload()
     },
-    async deleteVideo (path) {
+    async deleteVideo(path) {
       const ref = db.collection('projects').doc(this.id)
       const storage = firebase.storage().ref()
       const firestorageRef = storage.child(path)
       let data = await ref.get()
       this.videos = data.data().videos.filter(video => video.path != path)
-      firestorageRef.delete().then(function() {
-        }).catch(function(error) {
-          // Uh-oh, an error occurred!
-        });
+      firestorageRef.delete().then(function() {}).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
       await ref.update({
         videos: this.videos
       });
       location.reload()
     },
-    async onFileChanged (obj) {
+    async onFileChanged(obj) {
       this.image = obj.target.files[0]
       this.imageText = "Uploading..."
       this.fileName = Date.now()
-      this.storagePath = "projects/"+this.name+"/"+this.fileName
+      this.storagePath = "projects/" + this.name + "/" + this.fileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.storagePath)
       await ref.put(this.image)
@@ -217,19 +223,20 @@ export default {
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
       this.images = projRefGet.data().images
-      this.images.push(
-        {url:url,path:this.storagePath}
-      )
+      this.images.push({
+        url: url,
+        path: this.storagePath
+      })
       await projRef.update({
         images: this.images
       })
       location.reload()
     },
-    async onVideoUpload (obj) {
+    async onVideoUpload(obj) {
       this.video = obj.target.files[0]
       this.videoText = "Uploading..."
       this.videoFileName = Date.now()
-      this.videoStorage = "projects/"+this.name+"/"+this.videoFileName
+      this.videoStorage = "projects/" + this.name + "/" + this.videoFileName
       const storage = firebase.storage().ref()
       const ref = storage.child(this.videoStorage)
       await ref.put(this.video)
@@ -237,15 +244,16 @@ export default {
       const projRef = db.collection('projects').doc(this.id)
       const projRefGet = await projRef.get()
       this.videos = projRefGet.data().videos
-      this.videos.push(
-        {url:url,path:this.videoStorage}
-      )
+      this.videos.push({
+        url: url,
+        path: this.videoStorage
+      })
       await projRef.update({
         videos: this.videos
       })
       location.reload()
     },
-    async checkMember () {
+    async checkMember() {
       let membercheck = await db.collection('users').where("uname", "==", this.member).get()
       let check = this.members.find(item => item == this.member)
       if (this.member == null || this.member == "") {
@@ -255,37 +263,34 @@ export default {
         this.memberempty = false
         this.membernonexistent = true
         this.memberregd = false
-      }
-      else if (check != undefined){
+      } else if (check != undefined) {
         this.memberexists = false
         this.memberempty = false
         this.membernonexistent = false
         this.memberregd = true
-      }
-      else {
+      } else {
         this.memberexists = true
         this.memberempty = false
         this.membernonexistent = false
         this.memberregd = false
       }
     },
-  async checkTag () {
-    let check = this.tags.find(tag => tag == this.tag)
-    if (this.tag == null || this.tag == "") {
-      this.tagempty = true
-    } else if (check == undefined) {
-      this.tagempty = false
-      this.tagregd = false
-      this.tagsuccess = true
+    async checkTag() {
+      let check = this.tags.find(tag => tag == this.tag)
+      if (this.tag == null || this.tag == "") {
+        this.tagempty = true
+      } else if (check == undefined) {
+        this.tagempty = false
+        this.tagregd = false
+        this.tagsuccess = true
+      } else if (check != undefined) {
+        this.tagempty = false
+        this.tagregd = true
+        this.tagsuccess = false
+      }
     }
-    else if (check != undefined){
-      this.tagempty = false
-      this.tagregd = true
-      this.tagsuccess = false
-    }
-  }
-},
-  data () {
+  },
+  data() {
     return {
       name: this.$route.params.name,
       intro: null,
@@ -295,10 +300,10 @@ export default {
       membernonexistent: null,
       members: null,
       id: null,
-      memberregd:null,
+      memberregd: null,
       imageText: 'Click/Drag to Upload Project Pictures',
-      images:[],
-      image:null,
+      images: [],
+      image: null,
       storagePath: null,
       fileName: null,
       videos: [],
@@ -311,10 +316,10 @@ export default {
       tagempty: null,
       tagregd: null,
       tagsuccess: null,
-      clickTags: ['iot','at','python','javascript','nodejs','vue','image processing','ai']
+      clickTags: ['iot', 'at', 'python', 'javascript', 'nodejs', 'vue', 'image processing', 'ai']
     }
   },
-  async created(){
+  async created() {
     let projectcheck = await db.collection('projects').where("name", "==", this.name).get()
     this.id = projectcheck.docs[0].id
     this.intro = projectcheck.docs[0].data().intro
@@ -327,62 +332,71 @@ export default {
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return
-    }
-    else {
-      this.$router.push({ name: "project", params: {name:this.$route.params.name}})
+    } else {
+      this.$router.push({
+        name: "project",
+        params: {
+          name: this.$route.params.name
+        }
+      })
     }
   }
 }
 </script>
 
 <style>
-.imgstyle{
+.imgstyle {
   display: block;
-  max-width:300px;
-  max-height:200px;
+  max-width: 300px;
+  max-height: 200px;
   width: auto;
   height: auto;
 }
+
 .uploader {
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  height:300px;
-  background:#f3f3f3;
-  border:2px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 300px;
+  background: #f3f3f3;
+  border: 2px;
 }
-#filePhoto{
-    position:absolute;
-    width:100%;
-    height:100%;
-    opacity:0;
-    cursor:pointer;
+
+#filePhoto {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
-.container{
+
+.container {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.material-icons.green { color: green;
+
+.material-icons.green {
+  color: green;
 }
 
-.material-icons.red { color: red;
+.material-icons.red {
+  color: red;
 }
 
-.availability{
+.availability {
   padding-top: 6px;
   padding-left: 3px;
 }
 
-.members{
+.members {
   padding-left: 3px;
 }
 
-.green{
+.green {
   color: green;
 }
 
-.red{
+.red {
   color: red;
 }
-
 </style>
