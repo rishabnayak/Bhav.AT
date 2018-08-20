@@ -88,7 +88,7 @@ export default {
         let searchresults = await db.collection('users').where("tags", "array-contains", this.tagInput).get()
         this.users = searchresults.docs
       }
-    }
+    },
     async reset() {
       let all = await db.collection('users').get()
       this.users = all.docs

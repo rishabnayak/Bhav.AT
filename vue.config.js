@@ -1,7 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'Bhav.AT - Bhav Assistive Technology',
-    workboxPluginMode: 'InjectManifest'
+    name: 'Bhav.AT - Bhav Assistive Technology'
   },
 
   baseUrl: undefined,
