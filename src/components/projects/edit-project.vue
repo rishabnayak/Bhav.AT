@@ -8,6 +8,20 @@
           <label for="intro">Short Introduction</label>
           <textarea class="form-control" rows="5" id="intro" v-model="intro"></textarea>
         </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" v-model="city">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="state">State</label>
+            <input type="text" class="form-control" id="state" v-model="stt">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="country">Country</label>
+            <input type="text" class="form-control" id="country" v-model="country">
+          </div>
+        </div>
         <h6 class="mb-3">Members</h6>
         <p v-for="member in members" :key="member.id">
           <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
@@ -31,32 +45,47 @@
             <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
           </div>
         </div>
-        <h6 class="mb-3">Tags</h6>
-        <p v-for="tag in tags" :key="tag.id">
-          <span class="members">{{ tag }}</span>
+        <h6 class="mb-3">Disabilities</h6>
+        <p v-for="disability in disabilities" :key="disability.id">
+          <span class="members">{{ disability }}</span>
         </p>
         <div class="row">
           <div class="col-md-auto">
-            <label for="member">Tag</label>
+            <label for="member">Disability</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="tag" onpaste="return false" v-model="tag" @input="checkTag()">
-              <button :disabled="tagempty||tagregd" class="btn" @click.prevent="addTag()">Add</button>
+              <input type="text" class="form-control" id="tag" onpaste="return false" v-model="disability" @input="checkDisability()">
+              <button :disabled="disabilityempty||disabilityregd" class="btn" @click.prevent="addDisability()">Add</button>
               <div class="availability">
-                <i v-if="tagempty" class="material-icons red">close</i>
-                <i v-else-if="tagregd" class="material-icons red">close</i>
-                <i v-else-if="tagsuccess" class="material-icons green">check</i>
+                <i v-if="disabilityempty" class="material-icons red">close</i>
+                <i v-else-if="disabilityregd" class="material-icons red">close</i>
+                <i v-else-if="disabilitysuccess" class="material-icons green">check</i>
               </div>
             </div>
-            <p v-if="tagempty" class="red availability">Enter a Tag</p>
-            <p v-else-if="tagregd" class="red availability">Tag already added!</p>
-            <p v-else-if="tagsuccess" class="green availability">Tag Valid!</p>
+            <p v-if="disabilityempty" class="red availability">Enter a Disability</p>
+            <p v-else-if="disabilityregd" class="red availability">Disability already added!</p>
+            <p v-else-if="disabilitysuccess" class="green availability">Add Disability!</p>
           </div>
         </div>
+        <br>
+        <h6 class="mb-3">Technologies</h6>
+        <p v-for="technology in technologies" :key="technology.id">
+          <span class="members">{{ technology }}</span>
+        </p>
         <div class="row">
-          <div v-for="tag in clickTags">
-            <ul>
-              <li v-if="tags.find(uploadedTag => uploadedTag == tag) == undefined" style="display: inline-block; float: left;"><a class="btn text-muted" @click.prevent="clickTag(tag)">{{tag}}</a></li>
-            </ul>
+          <div class="col-md-auto">
+            <label for="member">Technology</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="tag" onpaste="return false" v-model="technology" @input="checkTechnology()">
+              <button :disabled="technologyempty||technologyregd" class="btn" @click.prevent="addTechnology()">Add</button>
+              <div class="availability">
+                <i v-if="technologyempty" class="material-icons red">close</i>
+                <i v-else-if="technologyregd" class="material-icons red">close</i>
+                <i v-else-if="technologysuccess" class="material-icons green">check</i>
+              </div>
+            </div>
+            <p v-if="technologyempty" class="red availability">Enter a Technology</p>
+            <p v-else-if="technologyregd" class="red availability">Technology already added!</p>
+            <p v-else-if="technologysuccess" class="green availability">Add Technology!</p>
           </div>
         </div>
         <br>
@@ -140,39 +169,15 @@ export default {
         return
       }
     },
-    async addTag() {
-      const ref = db.collection('projects').doc(this.id)
-      const refGet = await ref.get()
-      this.tags = refGet.data().tags
-      if (this.tagsuccess) {
-        this.tags.push(
-          this.tag
-        )
-        await ref.update({
-          tags: this.tags
-        })
-        this.tag = null
-        this.tagsuccess = null
-      } else {
-        return
-      }
-    },
-    async clickTag(tag) {
-      const ref = db.collection('projects').doc(this.id)
-      const refGet = await ref.get()
-      this.tags = refGet.data().tags
-      this.tags.push(
-        tag
-      )
-      await ref.update({
-        tags: this.tags
-      })
-    },
     async updateProject() {
       const ref = db.collection('projects').doc(this.id)
       const refGet = await ref.get()
       await ref.update({
-        intro: this.intro
+        intro: this.intro,
+        city: this.city,
+        state: this.stt,
+        country: this.country,
+        tags: [this.city,this.stt,this.country]
       })
       this.$router.push({
         name: "project",
@@ -275,18 +280,66 @@ export default {
         this.memberregd = false
       }
     },
-    async checkTag() {
-      let check = this.tags.find(tag => tag == this.tag)
-      if (this.tag == null || this.tag == "") {
-        this.tagempty = true
+    async checkDisability() {
+      let check = this.disabilities.find(disability => disability == this.disability)
+      if (this.disability == null || this.disability == "") {
+        this.disabilityempty = true
       } else if (check == undefined) {
-        this.tagempty = false
-        this.tagregd = false
-        this.tagsuccess = true
+        this.disabilityempty = false
+        this.disabilityregd = false
+        this.disabilitysuccess = true
       } else if (check != undefined) {
-        this.tagempty = false
-        this.tagregd = true
-        this.tagsuccess = false
+        this.disabilityempty = false
+        this.disabilityregd = true
+        this.disabilitysuccess = false
+      }
+    },
+    async addDisability() {
+      const ref = db.collection('projects').doc(this.id)
+      const refGet = await ref.get()
+      this.disabilities = refGet.data().disabilities
+      if (this.disabilitysuccess) {
+        this.disabilities.push(
+          this.disability
+        )
+        await ref.update({
+          disabilities: this.disabilities
+        })
+        this.disability = null
+        this.disabilitysuccess = null
+      } else {
+        return
+      }
+    },
+    async checkTechnology() {
+      let check = this.technologies.find(technology => technology == this.technology)
+      if (this.technology == null || this.technology == "") {
+        this.technologyempty = true
+      } else if (check == undefined) {
+        this.technologyempty = false
+        this.technologyregd = false
+        this.technologysuccess = true
+      } else if (check != undefined) {
+        this.technologyempty = false
+        this.technologyregd = true
+        this.technologysuccess = false
+      }
+    },
+    async addTechnology() {
+      const ref = db.collection('projects').doc(this.id)
+      const refGet = await ref.get()
+      this.technologies = refGet.data().technologies
+      if (this.technologysuccess) {
+        this.technologies.push(
+          this.technology
+        )
+        await ref.update({
+          technologies: this.technologies
+        })
+        this.technology = null
+        this.technologysuccess = null
+      } else {
+        return
       }
     }
   },
@@ -311,12 +364,19 @@ export default {
       videoStorage: null,
       videoFileName: null,
       videoText: 'Click/Drag to Upload Project Video',
-      tags: [],
-      tag: null,
-      tagempty: null,
-      tagregd: null,
-      tagsuccess: null,
-      clickTags: ['iot', 'at', 'python', 'javascript', 'nodejs', 'vue', 'image processing', 'ai']
+      city: null,
+      stt: null,
+      country: null,
+      disabilities: null,
+      disability: null,
+      disabilityempty: null,
+      disabilityregd: null,
+      disabilitysuccess: null,
+      technologies: null,
+      technology: null,
+      technologyempty: null,
+      technologyregd: null,
+      technologysuccess: null
     }
   },
   async created() {
@@ -328,7 +388,11 @@ export default {
     this.videos = projectcheck.docs[0].data().videos
     this.imageCheck = projectcheck.docs[0].data().images
     this.videoCheck = projectcheck.docs[0].data().videos
-    this.tags = projectcheck.docs[0].data().tags
+    this.city = projectcheck.docs[0].data().city
+    this.stt = projectcheck.docs[0].data().stt
+    this.country = projectcheck.docs[0].data().country
+    this.disabilities = projectcheck.docs[0].data().disabilities
+    this.technologies = projectcheck.docs[0].data().technologies
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return

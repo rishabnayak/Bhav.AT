@@ -285,7 +285,7 @@ export default {
       skill: null,
       skillempty: null,
       skillregd: null,
-      skillsuccess: null,
+      skillsuccess: null
     }
   },
   mounted: function() {

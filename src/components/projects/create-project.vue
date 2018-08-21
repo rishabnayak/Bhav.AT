@@ -61,7 +61,8 @@ export default {
         members: [this.user.uname],
         images: [],
         videos: [],
-        tags: []
+        technologies: [],
+        disabilities: []
       })
       this.$router.push({
         name: "project",
