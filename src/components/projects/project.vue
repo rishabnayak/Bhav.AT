@@ -38,6 +38,7 @@
         </div>
       </masonry>
     </div>
+    <comments/>
   </div>
   <hr class="featurette-divider">
 
@@ -55,8 +56,12 @@
 <script>
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
+import comments from '@/components/addons/comments'
 export default {
   name: 'project',
+  components: {
+    comments
+  },
   computed: {
     user() {
       return this.$store.state.user

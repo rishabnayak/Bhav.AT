@@ -25,6 +25,27 @@
         <button v-if="userCheck" class="btn btn-primary btn-lg btn-block col-md-3">Update</button>
       </router-link>
     </div>
+    <div class="jumbotron">
+      <h3>User Projects</h3>
+      <br>
+      <masonry :cols="{default: 3, 991: 2, 767: 1}" :gutter="{default: '30px', 767: '15px'}">
+        <div v-for="project in projects" :key="project.id" class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h2 class="my-0 font-weight-normal">{{project.data().name}}</h2></div>
+          <div class="card-body">
+            <h4 class="card-title">Short Introduction</h4>
+            <p>{{project.data().intro}}</p>
+            <h4>Members</h4>
+            <p v-for="member in project.data().members" :key="member.id">
+              <router-link :to="{ name: 'profile', params: {uname:member} }"><span>{{ member }}</span></router-link>
+            </p>
+            <router-link :to="{ name: 'project', params: {name:project.data().name} }">
+              <button v-if="project.data().members.find(item => item == user.uname)" class="btn btn-lg btn-block btn-primary">View</button>
+            </router-link>
+          </div>
+        </div>
+      </masonry>
+    </div>
   </div>
   <hr class="featurette-divider">
 
@@ -61,7 +82,8 @@ export default {
       affiliation: null,
       userCheck: null,
       imgURL: null,
-      picCheck: null
+      picCheck: null,
+      projects: null
     }
   },
   async created() {
@@ -79,6 +101,8 @@ export default {
       this.number = finduser.docs[0].data().number
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
+      let projectsGet = await db.collection('projects').where("members", "array-contains", this.user.uname).get()
+      this.projects = projectsGet.docs
       if (this.$route.params.uname == this.user.uname) {
         this.userCheck = true
       } else {
@@ -93,6 +117,8 @@ export default {
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
       this.imgURL = finduser.docs[0].data().profilePic[0]
+      let projectsGet = await db.collection('projects').where("members", "array-contains", this.user.uname).get()
+      this.projects = projectsGet.docs
       if (this.$route.params.uname == this.user.uname) {
         this.userCheck = true
       } else {
