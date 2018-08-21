@@ -3,6 +3,7 @@
   <div class="container">
     <div class="jumbotron">
       <h4 class="mb-3">User Profile</h4>
+      <h6 class="mb-3">All Fields are Required</h6>
       <form>
         <div class="container">
           <div v-if="this.picStat == undefined" class="uploader d-flex flex-column justify-content-center align-items-center rounded">
@@ -106,7 +107,7 @@
         </div>
         <hr class="mb-4">
       </form>
-      <button :disabled="unavailable||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
+      <button :disabled="unavailable||unameempty||fieldempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()&&checkAvailability()">Update</button>
     </div>
   </div>
   <hr class="featurette-divider">
@@ -185,17 +186,21 @@ export default {
       location.reload()
     },
     async checkAvailability() {
-      let checkname = await db.collection('users').where("uname", "==", this.uname).get()
-      if (this.uname == null || this.uname == "") {
+      if (this.uname == undefined) {
         this.unameempty = true
-      } else if (checkname.empty || checkname.docs[0].data().uname == this.user.uname) {
-        this.available = true
-        this.unameempty = false
-        this.unavailable = false
       } else {
-        this.available = false
-        this.unameempty = false
-        this.unavailable = true
+        let checkname = await db.collection('users').where("uname", "==", this.uname).get()
+        if (this.uname == null || this.uname == "") {
+          this.unameempty = true
+        } else if (checkname.empty || checkname.docs[0].data().uname == this.user.uname) {
+          this.available = true
+          this.unameempty = false
+          this.unavailable = false
+        } else {
+          this.available = false
+          this.unameempty = false
+          this.unavailable = true
+        }
       }
     },
     async checkDisability() {
@@ -285,7 +290,8 @@ export default {
       skill: null,
       skillempty: null,
       skillregd: null,
-      skillsuccess: null
+      skillsuccess: null,
+      fieldempty: null
     }
   },
   mounted: function() {
@@ -303,6 +309,9 @@ export default {
     this.disabilities = this.user.disabilities
     this.skills = this.user.skills
     this.picStat = this.user.profilePic
+    if (this.bio == undefined || this.city == undefined || this.stt == undefined || this.country == undefined || this.number == undefined || this.affiliation == undefined) {
+      this.fieldempty = true
+    }
   }
 }
 </script>

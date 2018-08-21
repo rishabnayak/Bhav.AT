@@ -69,8 +69,7 @@ export default {
         stt: null,
         completion: null,
         devstage: null,
-        tags: [],
-
+        tags: []
       })
       this.$router.push({
         name: "project",
