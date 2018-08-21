@@ -22,12 +22,12 @@
             <input type="text" class="form-control" id="country" v-model="country">
           </div>
         </div>
-        <h6 class="mb-3">Members</h6>
-        <p v-for="member in members" :key="member.id">
-          <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
-        </p>
         <div class="row">
-          <div class="col-md-auto mb-3">
+          <div class="col-md-4 mb-3">
+            <h6 class="mb-3">Members</h6>
+            <p v-for="member in members" :key="member.id">
+              <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
+            </p>
             <label for="member">Member Username</label>
             <div class="input-group">
               <input type="text" class="form-control" id="member" onpaste="return false" v-model="member" @input="checkMember()">
@@ -44,13 +44,11 @@
             <p v-else-if="memberexists" class="green availability">Member found!</p>
             <p v-else-if="membernonexistent" class="red availability">Member not found!</p>
           </div>
-        </div>
-        <h6 class="mb-3">Disabilities</h6>
-        <p v-for="disability in disabilities" :key="disability.id">
-          <span class="members">{{ disability }}</span>
-        </p>
-        <div class="row">
-          <div class="col-md-auto">
+          <div class="col-md-4 mb-3">
+            <h6 class="mb-3">Disabilities</h6>
+            <p v-for="disability in disabilities" :key="disability.id">
+              <span class="members">{{ disability }}</span>
+            </p>
             <label for="member">Disability</label>
             <div class="input-group">
               <input type="text" class="form-control" id="tag" onpaste="return false" v-model="disability" @input="checkDisability()">
@@ -65,14 +63,11 @@
             <p v-else-if="disabilityregd" class="red availability">Disability already added!</p>
             <p v-else-if="disabilitysuccess" class="green availability">Add Disability!</p>
           </div>
-        </div>
-        <br>
-        <h6 class="mb-3">Technologies</h6>
-        <p v-for="technology in technologies" :key="technology.id">
-          <span class="members">{{ technology }}</span>
-        </p>
-        <div class="row">
-          <div class="col-md-auto">
+          <div class="col-md-4 mb-3">
+            <h6 class="mb-3">Technologies</h6>
+            <p v-for="technology in technologies" :key="technology.id">
+              <span class="members">{{ technology }}</span>
+            </p>
             <label for="member">Technology</label>
             <div class="input-group">
               <input type="text" class="form-control" id="tag" onpaste="return false" v-model="technology" @input="checkTechnology()">
@@ -88,7 +83,29 @@
             <p v-else-if="technologysuccess" class="green availability">Add Technology!</p>
           </div>
         </div>
-        <br>
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="completion">Estimated Date of Completion</label>
+            <input type="text" class="form-control" id="completion" v-model="completion">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <h6 class="mb-3">Development Stage</h6>
+            <div class="custom-control custom-radio">
+              <input id="idea" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="idea" v-model="devstage">
+              <label class="custom-control-label" for="idea">Idea</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input id="prototype" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="prototype" v-model="devstage">
+              <label class="custom-control-label" for="prototype">Prototype</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input id="product" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="product" v-model="devstage">
+              <label class="custom-control-label" for="product">Product</label>
+            </div>
+          </div>
+        </div>
         <h6 class="mb-3">Images</h6>
         <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
           <p>{{imageText}}</p>
@@ -175,9 +192,11 @@ export default {
       await ref.update({
         intro: this.intro,
         city: this.city,
-        state: this.stt,
+        stt: this.stt,
         country: this.country,
-        tags: [this.city,this.stt,this.country]
+        tags: [this.city, this.stt, this.country, ...this.disabilities, ...this.members, ...this.technologies, this.completion, this.devstage],
+        completion: this.completion,
+        devstage: this.devstage
       })
       this.$router.push({
         name: "project",
@@ -376,7 +395,9 @@ export default {
       technology: null,
       technologyempty: null,
       technologyregd: null,
-      technologysuccess: null
+      technologysuccess: null,
+      completion: null,
+      devstage: null
     }
   },
   async created() {
@@ -393,6 +414,8 @@ export default {
     this.country = projectcheck.docs[0].data().country
     this.disabilities = projectcheck.docs[0].data().disabilities
     this.technologies = projectcheck.docs[0].data().technologies
+    this.completion = projectcheck.docs[0].data().completion
+    this.devstage = projectcheck.docs[0].data().devstage
     let check = this.members.find(item => item == this.user.uname)
     if (check != undefined) {
       return

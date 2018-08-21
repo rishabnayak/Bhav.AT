@@ -62,7 +62,15 @@ export default {
         images: [],
         videos: [],
         technologies: [],
-        disabilities: []
+        disabilities: [],
+        created: Date.now(),
+        country: null,
+        city: null,
+        stt: null,
+        completion: null,
+        devstage: null,
+        tags: [],
+        
       })
       this.$router.push({
         name: "project",
