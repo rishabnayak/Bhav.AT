@@ -70,7 +70,7 @@ export default {
         completion: null,
         devstage: null,
         tags: [],
-        
+
       })
       this.$router.push({
         name: "project",

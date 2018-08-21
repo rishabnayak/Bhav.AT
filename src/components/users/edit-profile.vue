@@ -300,9 +300,9 @@ export default {
     this.number = this.user.number
     this.affiliation = this.user.affiliation
     this.uname = this.user.uname
-    this.picStat = this.user.profilePic
     this.disabilities = this.user.disabilities
     this.skills = this.user.skills
+    this.picStat = this.user.profilePic
   }
 }
 </script>

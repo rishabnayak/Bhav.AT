@@ -34,7 +34,14 @@ const actions = {
         displayName: user.displayName,
         uid: user.uid,
         disabilities: [],
-        skills: []
+        skills: [],
+        bio: null,
+        city: null,
+        stt: null,
+        country: null,
+        number: null,
+        affiliation: null,
+        uname: null,
       })
       raid = await mydb.get()
       context.commit('setUser', raid.data())
