@@ -107,7 +107,8 @@
         </div>
         <hr class="mb-4">
       </form>
-      <button :disabled="unavailable||unameempty||fieldempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()&&checkAvailability()">Update</button>
+      <button :disabled="unavailable||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()&&checkAvailability()">Update</button>
+      <p v-if="fieldempty" class="red availability">Please fill in all data!</p>
     </div>
   </div>
   <hr class="featurette-divider">
@@ -135,23 +136,28 @@ export default {
   },
   methods: {
     async updateProfile() {
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        bio: this.bio,
-        city: this.city,
-        stt: this.stt,
-        country: this.country,
-        number: this.number,
-        affiliation: this.affiliation,
-        uname: this.uname,
-        tags: [this.city, this.stt, this.country, this.affiliation, this.uname, ...this.disabilities, ...this.skills]
-      })
-      this.$router.push({
-        name: "profile",
-        params: {
-          uname: this.uname
-        }
-      })
+      if (this.bio == undefined || this.city == undefined || this.stt == undefined || this.country == undefined || this.number == undefined || this.affiliation == undefined) {
+        this.fieldempty = true
+        return
+      } else {
+        const ref = db.collection('users').doc(this.user.uid)
+        await ref.update({
+          bio: this.bio,
+          city: this.city,
+          stt: this.stt,
+          country: this.country,
+          number: this.number,
+          affiliation: this.affiliation,
+          uname: this.uname,
+          tags: [this.city, this.stt, this.country, this.affiliation, this.uname, ...this.disabilities, ...this.skills]
+        })
+        this.$router.push({
+          name: "profile",
+          params: {
+            uname: this.uname
+          }
+        })
+      }
     },
     async deleteProfilePic() {
       const ref = db.collection('users').doc(this.user.uid)
@@ -309,9 +315,6 @@ export default {
     this.disabilities = this.user.disabilities
     this.skills = this.user.skills
     this.picStat = this.user.profilePic
-    if (this.bio == undefined || this.city == undefined || this.stt == undefined || this.country == undefined || this.number == undefined || this.affiliation == undefined) {
-      this.fieldempty = true
-    }
   }
 }
 </script>
