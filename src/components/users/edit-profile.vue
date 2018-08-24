@@ -3,7 +3,7 @@
   <div class="container">
     <div class="jumbotron">
       <h4 class="mb-3">User Profile</h4>
-      <h6 class="mb-3">All Fields are Required</h6>
+      <h6 class="mb-3">All Text Fields are Required</h6>
       <form>
         <div class="container">
           <div v-if="this.picStat == undefined" class="uploader d-flex flex-column justify-content-center align-items-center rounded">
