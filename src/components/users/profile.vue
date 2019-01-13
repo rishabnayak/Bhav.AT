@@ -101,7 +101,7 @@ export default {
       this.number = finduser.docs[0].data().number
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
-      let projectsGet = await db.collection('projects').where("members", "array-contains", this.user.uname).get()
+      let projectsGet = await db.collection('projects').where("members", "array-contains", this.$route.params.uname).get()
       this.projects = projectsGet.docs
       if (this.$route.params.uname == this.user.uname) {
         this.userCheck = true
@@ -117,7 +117,7 @@ export default {
       this.affiliation = finduser.docs[0].data().affiliation
       this.displayname = finduser.docs[0].data().displayName
       this.imgURL = finduser.docs[0].data().profilePic[0]
-      let projectsGet = await db.collection('projects').where("members", "array-contains", this.user.uname).get()
+      let projectsGet = await db.collection('projects').where("members", "array-contains", this.$route.params.uname).get()
       this.projects = projectsGet.docs
       if (this.$route.params.uname == this.user.uname) {
         this.userCheck = true
