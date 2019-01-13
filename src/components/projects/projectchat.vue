@@ -1,34 +1,46 @@
 <template>
 <main>
-  <div class="jumbotron">
-    <h3>Project Chat</h3>
-    <div class="my-3 p-3 bg-white rounded shadow-sm scroll" v-chat-scroll>
-      <div class="media text pt-3">
-        <div>
-          <div class="media-body pb-3 mb-0 lh-125" v-for="chat in chats" :key="chat.id">
-            <span>{{ chat.value }}</span>
-            <span class="text-muted">{{ chat.sender }}, {{ makeTimeReadable(chat.timestamp) }}</span>
-            <a v-if="user.uname == chat.sender" class="btn text-right text-muted" @click.prevent="delComment(chat.timestamp)">Delete</a>
+  <section class="jumbotron">
+    <div class="container">
+      <h3>Project Chat</h3>
+      <div class="my-3 p-3 bg-white rounded shadow-sm scroll" v-chat-scroll>
+        <div class="media text pt-3">
+          <div>
+            <div class="media-body pb-3 mb-0 lh-125" v-for="chat in chats" :key="chat.id">
+              <span>{{ chat.value }}</span>
+              <span class="text-muted">{{ chat.sender }}, {{ makeTimeReadable(chat.timestamp) }}</span>
+              <a v-if="user.uname == chat.sender" class="btn text-right text-muted" @click.prevent="delComment(chat.timestamp)">Delete</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <form>
-          <div class="input-group add-on">
-            <input type="text" class="form-control" id="newMessage" placeholder="Send a chat..." v-model="newMessage" @input="checkInput()">
-            <div class="input-group-btn">
-              <button :disabled="disableSend" class="btn btn-primary" @click.prevent="addComment()">Send</button>
+      <div class="row">
+        <div class="col-12">
+          <form>
+            <div class="input-group add-on">
+              <input type="text" class="form-control" id="newMessage" placeholder="Send a chat..." v-model="newMessage" @input="checkInput()">
+              <div class="input-group-btn">
+                <button :disabled="disableSend" class="btn btn-primary" @click.prevent="addComment()">Send</button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <hr class="featurette-divider">
+
+  <footer class="container">
+    <p class="float-right"><a href="#">Back to top</a></p>
+    <p>© 2018 Humanistic Co-Design Initiative ·
+      <a>
+        <router-link :to="{ name: 'privacy'}">Privacy</router-link>
+      </a>
+    </p>
+  </footer>
 </main>
 </template>
-
 <script>
 import moment from 'moment'
 import firebase from 'firebase'
