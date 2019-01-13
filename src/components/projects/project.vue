@@ -25,11 +25,11 @@
       <p v-for="member in members" :key="member.id" class="content">
         <router-link :to="{ name: 'profile', params: {uname:member} }"><span class="members">{{ member }}</span></router-link>
       </p>
-      <h5 v-if="disabilities" class="section-head">Disabilities</h5>
+      <h5 v-if="disabilities.length!=0" class="section-head">Disabilities</h5>
       <p v-if="disabilities" class="content" v-for="disability in disabilities" :key="disability.id">
         <span class="members">{{ disability }}</span>
       </p>
-      <h5 v-if="technologies" class="section-head">Technologies</h5>
+      <h5 v-if="technologies.length!=0" class="section-head">Technologies</h5>
       <p v-if="technologies" class="content" v-for="technology in technologies" :key="technology.id">
         <span class="members">{{ technology }}</span>
       </p>

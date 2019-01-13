@@ -105,15 +105,15 @@
           <div class="col-md-4 mb-3">
             <h6 class="mb-3">Development Stage</h6>
             <div class="custom-control custom-radio">
-              <input id="idea" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="idea" v-model="devstage">
+              <input id="Idea" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="idea" v-model="devstage">
               <label class="custom-control-label" for="idea">Idea</label>
             </div>
             <div class="custom-control custom-radio">
-              <input id="prototype" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="prototype" v-model="devstage">
+              <input id="Prototype" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="prototype" v-model="devstage">
               <label class="custom-control-label" for="prototype">Prototype</label>
             </div>
             <div class="custom-control custom-radio">
-              <input id="product" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="product" v-model="devstage">
+              <input id="Product" name="devstage" type="radio" class="custom-control-input" checked="" required="" value="product" v-model="devstage">
               <label class="custom-control-label" for="product">Product</label>
             </div>
           </div>
