@@ -1,6 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'Bhav.AT - Bhav Assistive Technology'
+    name: 'The Humanistic Co-Design Initiative'
   },
 
   baseUrl: undefined,
