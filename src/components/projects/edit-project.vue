@@ -6,7 +6,19 @@
       <form>
         <div class="mb-3">
           <label for="intro">Short Introduction</label>
-          <textarea class="form-control" rows="5" id="intro" v-model="intro"></textarea>
+          <textarea class="form-control" rows="3" id="intro" v-model="intro"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="codesigner">Co-Designer Description</label>
+          <textarea class="form-control" rows="5" id="codesigner" v-model="codesigner"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="challenge">Challenge Description</label>
+          <textarea class="form-control" rows="5" id="challenge" v-model="challenge"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="solution">Solution Description</label>
+          <textarea class="form-control" rows="5" id="solution" v-model="solution"></textarea>
         </div>
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -123,7 +135,7 @@
             </div>
           </div>
         </div>
-        <h6 class="mb-3 mt-3">Video</h6>
+        <h6 class="mb-3 mt-3">Videos</h6>
         <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
           <p>{{videoText}}</p>
           <input id="filePhoto" type="file" accept="video/*" @change="onVideoUpload($event)">
@@ -135,6 +147,28 @@
               <div class="media-body pb-3 mb-0 small lh-125 border-gray">
                 <div class="d-flex justify-content-between align-items-center w-100">
                   <span class="btn text-muted" @click="deleteVideo(video.path)">Remove</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h6 class="mb-3">Other Files</h6>
+        <div class="uploader d-flex flex-column justify-content-center align-items-center rounded">
+          <p>{{mediaText}}</p>
+          <input id="filePhoto" type="file" accept="media_type" @change="onFileUpload($event)">
+        </div>
+        <div v-if="this.mediafiles.length !=0">
+          <div v-for="file in mediafiles" :key="file.id" class="my-3 p-3 bg-white rounded shadow-sm">
+            <div class="media text-muted pt-3">
+              <a :href="file.url">
+                <figure>
+                <img class="mr-2 rounded filestyle" src="@/assets/file.png">
+                <figcaption>{{file.name}}</figcaption>
+              </figure>
+              </a>
+              <div class="media-body pb-3 mb-0 small lh-125 border-gray">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                  <span class="btn text-muted" @click="deleteFile(file.path)">Remove</span>
                 </div>
               </div>
             </div>
@@ -191,6 +225,9 @@ export default {
       const refGet = await ref.get()
       await ref.update({
         intro: this.intro,
+        challenge: this.challenge,
+        codesigner: this.codesigner,
+        solution: this.solution,
         city: this.city,
         stt: this.stt,
         country: this.country,
@@ -235,6 +272,20 @@ export default {
       });
       location.reload()
     },
+    async deleteFile(path) {
+      const ref = db.collection('projects').doc(this.id)
+      const storage = firebase.storage().ref()
+      const firestorageRef = storage.child(path)
+      let data = await ref.get()
+      this.mediafiles = data.data().media.filter(media => media.path != path)
+      firestorageRef.delete().then(function() {}).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
+      await ref.update({
+        media: this.mediafiles
+      });
+      location.reload()
+    },
     async onFileChanged(obj) {
       this.image = obj.target.files[0]
       this.imageText = "Uploading..."
@@ -274,6 +325,29 @@ export default {
       })
       await projRef.update({
         videos: this.videos
+      })
+      location.reload()
+    },
+    async onFileUpload(obj) {
+      this.media = obj.target.files[0]
+      this.mediaText = "Uploading..."
+      this.mediaFileName = Date.now()
+      this.mediaStorage = "projects/" + this.name + "/" + this.mediaFileName
+      const actualname = this.media.name
+      const storage = firebase.storage().ref()
+      const ref = storage.child(this.mediaStorage)
+      await ref.put(this.media)
+      const url = await ref.getDownloadURL()
+      const projRef = db.collection('projects').doc(this.id)
+      const projRefGet = await projRef.get()
+      this.mediafiles = projRefGet.data().media
+      this.mediafiles.push({
+        url: url,
+        path: this.mediaStorage,
+        name: actualname
+      })
+      await projRef.update({
+        media: this.mediafiles
       })
       location.reload()
     },
@@ -366,6 +440,9 @@ export default {
     return {
       name: this.$route.params.name,
       intro: null,
+      challenge: null,
+      codesigner: null,
+      solution: null,
       member: null,
       memberempty: null,
       memberexists: null,
@@ -383,6 +460,11 @@ export default {
       videoStorage: null,
       videoFileName: null,
       videoText: 'Click/Drag to Upload Project Video',
+      mediafiles: [],
+      media: null,
+      mediaStorage: null,
+      mediaFileName: null,
+      mediaText: 'Click/Drag to Upload Other Files',
       city: null,
       stt: null,
       country: null,
@@ -407,8 +489,10 @@ export default {
     this.members = projectcheck.docs[0].data().members
     this.images = projectcheck.docs[0].data().images
     this.videos = projectcheck.docs[0].data().videos
-    this.imageCheck = projectcheck.docs[0].data().images
-    this.videoCheck = projectcheck.docs[0].data().videos
+    this.mediafiles = projectcheck.docs[0].data().media
+    this.challenge = projectcheck.docs[0].data().challenge
+    this.codesigner = projectcheck.docs[0].data().codesigner
+    this.solution = projectcheck.docs[0].data().solution
     this.city = projectcheck.docs[0].data().city
     this.stt = projectcheck.docs[0].data().stt
     this.country = projectcheck.docs[0].data().country
@@ -436,6 +520,14 @@ export default {
   display: block;
   max-width: 300px;
   max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+.filestyle {
+  display: block;
+  max-width: 50px;
+  max-height: 50px;
   width: auto;
   height: auto;
 }

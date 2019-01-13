@@ -22,7 +22,7 @@
         </div>
         <div class="mb-3">
           <label for="intro">Short Introduction</label>
-          <textarea class="form-control" rows="5" id="intro" v-model="intro"></textarea>
+          <textarea class="form-control" rows="3" id="intro" v-model="intro"></textarea>
         </div>
         <hr class="mb-4">
       </form>
@@ -61,6 +61,10 @@ export default {
         members: [this.user.uname],
         images: [],
         videos: [],
+        media: [],
+        challenge: null,
+        codesigner: null,
+        solution: null,
         technologies: [],
         disabilities: [],
         created: Date.now(),
