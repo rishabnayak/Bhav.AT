@@ -115,7 +115,7 @@
 
   <footer class="container">
     <p class="float-right"><a href="#">Back to top</a></p>
-    <p>© 2018 Bhav.AT ·
+    <p>© 2018 Humanistic Co-Design Initiative ·
       <a>
         <router-link :to="{ name: 'privacy'}">Privacy</router-link>
       </a>
