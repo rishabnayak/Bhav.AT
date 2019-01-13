@@ -2,7 +2,7 @@
   <main role="main">
     <section class="jumbotron text-center">
         <div class="container">
-          <h1 class="jumbotron-heading">Build at Bhav.AT</h1>
+          <h1 class="jumbotron-heading">Build at the Humanistic Co-Design Initiative</h1>
           <p class="lead text-muted">We run assistive technology workshops in cities throughout India. We build and sell assistive technology devices. We offer mentoring, product development, production and certification services for assistive technologies.</p>
           <p>
             <a class="btn btn-outline-secondary my-2"><router-link :to="{ name: 'connect'}">Reach Out!</router-link></a>
@@ -47,7 +47,7 @@
 
           <footer class="container">
             <p class="float-right"><a href="#">Back to top</a></p>
-            <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
+            <p>© 2018 Humanistic Co-Design Initiative · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
           </footer>
     </main>
 </template>

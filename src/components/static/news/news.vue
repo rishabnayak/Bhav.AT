@@ -3,7 +3,7 @@
     <section class="jumbotron text-center">
         <div class="container">
           <h1 class="jumbotron-heading">News</h1>
-          <p class="lead text-muted">Upcoming workshops, events, talks, products launches and more from Bhav.AT</p>
+          <p class="lead text-muted">Upcoming workshops, events, talks, products launches and more from the Humanistic Co-Design Initiative</p>
         </div>
       </section>
 
@@ -42,7 +42,7 @@
 
   <footer class="container">
     <p class="float-right"><a href="#">Back to top</a></p>
-    <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
+    <p>© 2018 Humanistic Co-Design Initiative · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
   </footer>
     </main>
 </template

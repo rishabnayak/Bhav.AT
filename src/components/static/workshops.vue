@@ -3,7 +3,7 @@
     <section class="jumbotron text-center">
         <div class="container">
           <h1 class="jumbotron-heading">Workshops</h1>
-          <p class="lead text-muted">Bhav.AT runs workshops throughout cities in India. <br> Please reach out to us for inquiries about participating or helping to run future workshops.</p>
+          <p class="lead text-muted">The Humanistic Co-Design Initiative runs workshops throughout cities in India. <br> Please reach out to us for inquiries about participating or helping to run future workshops.</p>
           <p>
             <a class="btn btn-outline-secondary my-2"><router-link :to="{ name: 'connect'}">Reach Out!</router-link></a>
           </p>
@@ -48,7 +48,7 @@
 
 <footer class="container">
   <p class="float-right"><a href="#">Back to top</a></p>
-  <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
+  <p>© 2018 Humanistic Co-Design Initiative · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
 </footer>
     </main>
 </template

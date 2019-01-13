@@ -13,7 +13,7 @@
           <div class="blog-post">
 
             <h2>Who we are</h2>
-            <p>We are Bhav.AT</p>
+            <p>We are the Humanistic Co-Design Initiative</p>
             <h2>What personal data we collect and why we collect it</h2>
             <h4>Contact forms</h4>
             <p>If you leave your name, email address or information in a contact form we retain this information for the purposes of communicating with you.
@@ -48,7 +48,7 @@
 
 <footer class="container">
   <p class="float-right"><a href="#">Back to top</a></p>
-  <p>© 2018 Bhav.AT · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
+  <p>© 2018 Humanistic Co-Design Initiative · <a><router-link :to="{ name: 'privacy'}">Privacy</router-link></a></p>
 </footer>
     </main>
 </template>
