@@ -35,7 +35,7 @@
           <h4 class="card-title">Short Introduction</h4>
           <p>{{project.data().intro}}</p>
           <h4>Members</h4>
-          <p v-for="member in project.data().members" :key="member.id">
+          <p v-for="member in project.data().members" :key="member">
             <router-link :to="{ name: 'profile', params: {uname:member} }"><span>{{ member }}</span></router-link>
           </p>
           <router-link :to="{ name: 'project', params: {name:project.data().name} }">
